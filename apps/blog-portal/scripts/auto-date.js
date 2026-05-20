@@ -5,10 +5,10 @@ hexo.extend.filter.register('before_post_render', function (data) {
   if (!data.date || data.date.valueOf() === 0) {
     if (data.source) {
       try {
-        const stats = statSync(data.source)
+        const stats = statSync(data.full_source)
         data.date = stats.mtime
       } catch {
-        // file not found (e.g. draft in db.json cache), leave date as-is
+        // file not found, leave date as-is
       }
     }
   }
