@@ -23,7 +23,11 @@ export function createApp() {
   app.use('*', errorHandler())
   app.use('*', authMiddleware())
 
-  // Admin UI static files
+  // Admin UI static files — no cache to avoid stale JS/CSS after deploy
+  app.use('/admin/*', async (c, next) => {
+    await next()
+    c.res.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate')
+  })
   app.use('/admin/*', serveStatic({ root: './public' }))
 
   app.route('/', health)

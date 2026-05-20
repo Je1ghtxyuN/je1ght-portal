@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
+  <base href="/admin/">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -242,9 +243,18 @@
       <!-- Post Editor Modal -->
       <div id="post-editor-modal" class="modal" style="display:none">
         <div class="modal-content modal-large">
+          <div id="drop-zone-overlay" class="drop-zone-overlay">
+            <div class="drop-zone-message">Drop .md file to import</div>
+          </div>
           <div class="modal-header">
             <h2 id="post-editor-title">New Post</h2>
-            <button class="btn btn-ghost modal-close">&times;</button>
+            <div class="modal-header-actions">
+              <label class="btn btn-ghost btn-sm import-md-btn">
+                Import .md
+                <input type="file" accept=".md,.markdown,.txt" id="import-md-input" style="display:none">
+              </label>
+              <button class="btn btn-ghost modal-close">&times;</button>
+            </div>
           </div>
           <form id="post-form">
             <input type="hidden" id="post-id">

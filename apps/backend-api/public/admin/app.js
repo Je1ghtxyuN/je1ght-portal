@@ -313,14 +313,6 @@ function skillTemplate(skill, i) {
     </div>`
 }
 
-function featureTemplate(feature, i) {
-  return `
-    <div class="array-item">
-      <input type="text" value="${esc(feature || '')}" placeholder="Feature" class="ft-value">
-      <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.array-item').remove()">&times;</button>
-    </div>`
-}
-
 function expTemplate(exp, i) {
   return `
     <div class="exp-item array-item">
@@ -448,8 +440,15 @@ async function saveProfile() {
     footer_note: readVal('pf-footer-note'),
   }
 
-  await api('/site-profile', { method: 'PUT', body: JSON.stringify({ data: p }) })
-  showToast('Profile saved')
+  try {
+    await api('/site-profile', { method: 'PUT', body: JSON.stringify({ data: p }) })
+    showToast('Profile saved')
+  } catch (err) {
+    showToast('Save failed: ' + err.message, 'error')
+    if (err.message.includes('Authentication required')) {
+      showView('login')
+    }
+  }
 }
 
 document.getElementById('save-profile-btn').addEventListener('click', saveProfile)
@@ -470,12 +469,6 @@ document.getElementById('pf-add-experience').addEventListener('click', () => {
   div.innerHTML = expTemplate({}, 0)
   document.getElementById('pf-experience').appendChild(div.firstElementChild)
 })
-document.getElementById('pf-add-feature').addEventListener('click', () => {
-  const div = document.createElement('div')
-  div.innerHTML = featureTemplate('', 0)
-  document.getElementById('pf-sr-features').appendChild(div.firstElementChild)
-})
-
 // Avatar preview on input change
 document.getElementById('pf-avatar').addEventListener('input', function () {
   document.getElementById('pf-avatar-preview').src = this.value
@@ -490,10 +483,22 @@ document.getElementById('rebuild-btn').addEventListener('click', async () => {
   btn.disabled = true
   btn.textContent = 'Rebuilding...'
   try {
+    // Pre-flight session check — if session expired, redirect to login
+    try { await api('/auth/session') } catch {
+      showToast('Session expired. Please log in first.', 'error')
+      btn.disabled = false
+      btn.textContent = 'Rebuild Portal'
+      showView('login')
+      return
+    }
+
     const result = await api('/admin/rebuild', { method: 'POST' })
     showToast(result.message)
   } catch (err) {
     showToast('Rebuild failed: ' + err.message, 'error')
+    if (err.message.includes('Authentication required')) {
+      showView('login')
+    }
   } finally {
     btn.disabled = false
     btn.textContent = 'Rebuild Portal'
@@ -525,6 +530,112 @@ function splitComma(str) {
     .map((s) => s.trim())
     .filter(Boolean)
 }
+
+// --- Import .md ---
+function parseFrontmatter(raw) {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
+  if (!match) return { meta: {}, body: raw.trim() }
+
+  const yaml = match[1]
+  const body = match[2].trim()
+  const meta = {}
+  let currentKey = null
+  let currentArray = null
+
+  for (const line of yaml.split('\n')) {
+    const arrayItem = line.match(/^\s+-\s+(.+)$/)
+    if (arrayItem && currentKey) {
+      if (!currentArray) currentArray = []
+      currentArray.push(arrayItem[1].trim().replace(/^["']|["']$/g, ''))
+      meta[currentKey] = currentArray
+      continue
+    }
+    currentArray = null
+
+    const kv = line.match(/^(\w[\w-]*):\s*(.*)$/)
+    if (kv) {
+      currentKey = kv[1]
+      let val = kv[2].trim().replace(/^["']|["']$/g, '')
+      if (val === '' || val === 'null') {
+        meta[currentKey] = null
+      } else {
+        meta[currentKey] = val
+      }
+    }
+  }
+
+  return { meta, body }
+}
+
+function importMdToForm(text, filename) {
+  const { meta, body } = parseFrontmatter(text)
+  const titleEl = document.getElementById('post-title')
+  const contentEl = document.getElementById('post-content')
+  if (!titleEl || !contentEl) return
+
+  if (meta.title) document.getElementById('post-title').value = meta.title
+  if (meta.slug) document.getElementById('post-slug').value = meta.slug
+  if (meta.description) document.getElementById('post-description').value = meta.description
+  if (meta.categories) {
+    const cats = Array.isArray(meta.categories) ? meta.categories : [meta.categories]
+    document.getElementById('post-categories').value = cats.join(', ')
+  }
+  if (meta.tags) {
+    const tags = Array.isArray(meta.tags) ? meta.tags : [meta.tags]
+    document.getElementById('post-tags').value = tags.join(', ')
+  }
+  if (meta.coverImage || meta.cover) document.getElementById('post-cover').value = meta.coverImage || meta.cover
+  contentEl.value = body
+
+  showToast(`Imported from ${filename}`)
+}
+
+function handleMdFile(file) {
+  if (!file || (!file.name.endsWith('.md') && !file.name.endsWith('.markdown') && !file.name.endsWith('.txt'))) {
+    showToast('Please drop a .md file', 'error')
+    return
+  }
+  const reader = new FileReader()
+  reader.onload = (e) => importMdToForm(e.target.result, file.name)
+  reader.readAsText(file)
+}
+
+// File input change
+document.getElementById('import-md-input').addEventListener('change', (e) => {
+  if (e.target.files[0]) handleMdFile(e.target.files[0])
+  e.target.value = ''
+})
+
+// Drag and drop on post editor modal
+const postModal = document.getElementById('post-editor-modal')
+let dragCounter = 0
+
+postModal.addEventListener('dragenter', (e) => {
+  e.preventDefault()
+  dragCounter++
+  document.getElementById('drop-zone-overlay').classList.add('active')
+})
+
+postModal.addEventListener('dragleave', (e) => {
+  e.preventDefault()
+  dragCounter--
+  if (dragCounter <= 0) {
+    dragCounter = 0
+    document.getElementById('drop-zone-overlay').classList.remove('active')
+  }
+})
+
+postModal.addEventListener('dragover', (e) => {
+  e.preventDefault()
+})
+
+postModal.addEventListener('drop', (e) => {
+  e.preventDefault()
+  dragCounter = 0
+  document.getElementById('drop-zone-overlay').classList.remove('active')
+  const file = e.dataTransfer.files[0]
+  if (file) handleMdFile(file)
+})
 
 // --- Init ---
 checkSession()

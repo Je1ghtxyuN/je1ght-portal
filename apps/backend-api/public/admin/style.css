@@ -300,3 +300,37 @@ body {
   height: 32px;
   border-radius: 4px;
 }
+
+/* Import .md drop zone */
+.modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.import-md-btn {
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.drop-zone-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(88,166,255,0.15);
+  border: 2px dashed #58a6ff;
+  border-radius: 12px;
+  z-index: 10;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.drop-zone-overlay.active {
+  display: flex;
+}
+.drop-zone-message {
+  background: #161b22;
+  color: #58a6ff;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}

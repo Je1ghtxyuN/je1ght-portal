@@ -21,6 +21,8 @@ rsync -avz --delete "$SERVER:$SERVER_PORTAL/source/_posts/" "$REPO_ROOT/apps/blo
 
 echo "[2/5] Building Portal..."
 cd "$REPO_ROOT/apps/blog-portal"
+# Clear Hexo cache so stale db.json doesn't poison the build with old data
+rm -f db.json
 ./node_modules/.bin/hexo generate 2>&1 | tail -1
 
 # Bust Cloudflare cache by replacing BUILD_VER placeholder with Unix timestamp
