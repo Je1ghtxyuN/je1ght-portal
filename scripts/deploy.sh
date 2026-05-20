@@ -13,11 +13,36 @@ echo "========================================="
 # --- Local build ---
 
 echo ""
-echo "[1/5] Syncing latest content from server..."
-# Pull latest _data/ and _posts/ from server (admin UI edits live in server MySQL,
-# rebuild script writes them to YAML; we need those files before local hexo generate)
-rsync -avz --delete "$SERVER:$SERVER_PORTAL/source/_data/" "$REPO_ROOT/apps/blog-portal/source/_data/" 2>&1 | tail -1
-rsync -avz --delete "$SERVER:$SERVER_PORTAL/source/_posts/" "$REPO_ROOT/apps/blog-portal/source/_posts/" 2>&1 | tail -1
+echo "[1/5] Bidirectional content sync..."
+
+# Ensure directories exist (postimage/ may not exist on first run)
+mkdir -p "$REPO_ROOT/apps/blog-portal/source/postimage"
+ssh "$SERVER" "mkdir -p $SERVER_PORTAL/source/postimage"
+
+# Phase a: push local new/edited posts and images to server (no --delete, preserves both sides)
+rsync -avz \
+  "$REPO_ROOT/apps/blog-portal/source/_posts/" \
+  "$SERVER:$SERVER_PORTAL/source/_posts/" 2>&1 | tail -1
+rsync -avz \
+  "$REPO_ROOT/apps/blog-portal/source/postimage/" \
+  "$SERVER:$SERVER_PORTAL/source/postimage/" 2>&1 | tail -1
+rsync -avz \
+  "$REPO_ROOT/apps/blog-portal/source/_data/" \
+  "$SERVER:$SERVER_PORTAL/source/_data/" 2>&1 | tail -1
+
+# Phase b: import local posts into MySQL (skips already-managed files)
+ssh "$SERVER" "docker exec je1ght-backend-api node scripts/import-local-posts.js 2>&1" || true
+
+# Phase c: pull back server state (now includes Admin-created posts + managed-marked local posts)
+rsync -avz \
+  "$SERVER:$SERVER_PORTAL/source/_posts/" \
+  "$REPO_ROOT/apps/blog-portal/source/_posts/" 2>&1 | tail -1
+rsync -avz \
+  "$SERVER:$SERVER_PORTAL/source/postimage/" \
+  "$REPO_ROOT/apps/blog-portal/source/postimage/" 2>&1 | tail -1
+rsync -avz \
+  "$SERVER:$SERVER_PORTAL/source/_data/" \
+  "$REPO_ROOT/apps/blog-portal/source/_data/" 2>&1 | tail -1
 
 echo "[2/5] Building Portal..."
 cd "$REPO_ROOT/apps/blog-portal"
