@@ -542,6 +542,67 @@ module.exports = function createPortalRenderer(hexo) {
     )
   }
 
+  const renderBlog = (siteLocals) => {
+    const allPosts = getLatestPosts(siteLocals, Number.MAX_SAFE_INTEGER)
+
+    return renderTag(
+      'div',
+      { class: 'portal-page portal-blog' },
+      renderTag(
+        'section',
+        { class: 'portal-section' },
+        allPosts.length
+          ? renderTag(
+              'div',
+              { class: 'portal-post-list' },
+              allPosts
+                .map((post) => {
+                  const title = fallbackText(post.title, PORTAL_CONFIG.DEFAULT_TITLE)
+                  const excerptSource = post.description || post.excerpt || post.content || ''
+                  const excerptBase = stripHtml(excerptSource)
+                  const excerpt = excerptBase
+                    ? excerptBase.length > 160
+                      ? `${excerptBase.slice(0, 160)}...`
+                      : excerptBase
+                    : PORTAL_CONFIG.DEFAULT_DESCRIPTION
+
+                  return renderTag(
+                    'article',
+                    { class: 'portal-card portal-post-card' },
+                    `${renderTag(
+                      'div',
+                      { class: 'portal-post-card__meta' },
+                      renderTag(
+                        'time',
+                        { datetime: formatDateTime(post.date) },
+                        escapeHtml(formatDate(post.date))
+                      )
+                    )}${renderTag(
+                      'h3',
+                      { class: 'portal-card__title' },
+                      renderTag(
+                        'a',
+                        { href: resolveHref(post.path) },
+                        escapeHtml(title)
+                      )
+                    )}${renderTag(
+                      'p',
+                      { class: 'portal-card__copy' },
+                      escapeHtml(excerpt)
+                    )}`
+                  )
+                })
+                .join('')
+            )
+          : renderTag(
+              'div',
+              { class: 'portal-empty-state' },
+              renderTag('p', {}, 'No posts yet.')
+            )
+      )
+    )
+  }
+
   const renderPortfolioPreview = (portfolio = {}, home = {}) => {
     const portfolioSection = portfolio.section || {}
     const portfolioCards = fallbackArray(portfolio.cards)
@@ -1061,6 +1122,7 @@ module.exports = function createPortalRenderer(hexo) {
     renderPortfolioPreview,
     renderFooter,
     renderHome,
+    renderBlog,
     renderPortfolio,
     renderAbout,
     renderContact,

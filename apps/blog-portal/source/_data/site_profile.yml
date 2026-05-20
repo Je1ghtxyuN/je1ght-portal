@@ -19,7 +19,10 @@ about:
   intro_summary: 
   experience_title: Experience
 intro:
-  long: 
+  long: "I'm an undergraduate student majoring in Computer Science at Southeast University.
+As a developer and passionate gamer, I love bridging the gap between imagination and reality through code. My technical journey thrives on building personal projects and diving into game development, where I blend physics, interactive systems, and creative mechanics.
+When I’m not debugging or refactoring code, you’ll find me exploring immersive JRPGs, grinding competitive FPS titles—mostly across Steam and Nintendo Switch. I also have a deep love for virtual culture—especially standard-bearers like Hatsune Miku and the deep lore of KanColle.
+Always building, always gaming, and always looking for the next exciting challenge."
   short: 
 owner:
   full_name: Kyoka
@@ -27,7 +30,7 @@ owner:
 contact:
   email: honorxyun@gmail.com
   location: "Nanjing, Jiangsu, China"
-  availability_note: "Best for project discussions, collaboration ideas, and technical conversations. Response times may slow down during busy academic weeks."
+  availability_note: "Best for project discussions, collaboration ideas, and technical conversations."
   formspree_endpoint: "https://formspree.io/f/mkgbpnbb"
 subtitle: 
 icon_path: /shared-assets/images/icon.png

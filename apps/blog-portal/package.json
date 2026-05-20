@@ -14,7 +14,11 @@
   "dependencies": {
     "hexo": "^7.3.0",
     "hexo-cli": "^4.3.2",
+    "hexo-generator-archive": "^2.0.0",
+    "hexo-generator-category": "^2.0.0",
+    "hexo-generator-index": "^4.0.0",
     "hexo-generator-searchdb": "^1.4.1",
+    "hexo-generator-tag": "^2.0.0",
     "hexo-renderer-marked": "^7.0.1",
     "hexo-renderer-pug": "^3.0.0",
     "hexo-server": "^3.0.0",

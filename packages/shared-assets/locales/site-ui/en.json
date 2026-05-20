@@ -45,6 +45,7 @@
     "languageSelectorLabel": "Language",
     "nav": {
       "home": "Home",
+            "blog": "Blog",
       "archives": "Archives",
       "categories": "Categories",
       "portfolio": "Portfolio",

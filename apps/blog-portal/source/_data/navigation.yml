@@ -3,6 +3,11 @@ items:
     path: /
     icon: fas fa-house
     external: false
+  - label: Blog
+    path: /blog/
+    icon: fas fa-feather-pointed
+    external: false
+
   - label: Archives
     path: /archives/
     icon: fas fa-box-archive
