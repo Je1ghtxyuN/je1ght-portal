@@ -18,10 +18,11 @@ const validateFirebaseConfig = (config) => {
   const missingFields = requiredFields.filter(field => !config[field]);
 
   if (missingFields.length > 0) {
-    throw new Error(
+    console.warn(
       `Firebase配置不完整，缺少字段: ${missingFields.join(', ')}. ` +
       '请在 .env.local 中设置 VITE_FIREBASE_* 环境变量。'
     );
+    return null;
   }
 
   return config;
@@ -38,44 +39,46 @@ const firebaseConfig = validateFirebaseConfig({
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 });
 
-// 1. 初始化 Firebase 应用
-let app;
-try {
-  app = initializeApp(firebaseConfig);
-  console.log('Firebase应用初始化成功');
-} catch (error) {
-  console.error('Firebase初始化失败:', error);
-  throw new Error('无法初始化Firebase应用，请检查配置');
-}
-
-// 2. 初始化 Analytics (仅在浏览器环境运行，防止 SSR 报错)
+let app = null;
+let auth = null;
+let db = null;
 let analytics = null;
-if (typeof window !== 'undefined') {
+
+if (firebaseConfig) {
+  // 1. 初始化 Firebase 应用
   try {
-    // 检查是否启用Analytics
-    const enableAnalytics = import.meta.env.VITE_ENABLE_ANALYTICS !== 'false';
-    if (enableAnalytics) {
-      analytics = getAnalytics(app);
-      console.log('Firebase Analytics初始化成功');
-    } else {
-      console.log('Firebase Analytics已禁用');
-    }
+    app = initializeApp(firebaseConfig);
+    console.log('Firebase应用初始化成功');
   } catch (error) {
-    console.warn('Firebase Analytics初始化失败:', error);
+    console.warn('Firebase初始化失败:', error.message);
   }
+
+  // 2. 初始化 Analytics (仅在浏览器环境运行，防止 SSR 报错)
+  if (app && typeof window !== 'undefined') {
+    try {
+      const enableAnalytics = import.meta.env.VITE_ENABLE_ANALYTICS !== 'false';
+      if (enableAnalytics) {
+        analytics = getAnalytics(app);
+        console.log('Firebase Analytics初始化成功');
+      }
+    } catch (error) {
+      console.warn('Firebase Analytics初始化失败:', error.message);
+    }
+  }
+
+  // 3. 导出 Auth 和 Firestore 供 App.jsx 使用
+  if (app) {
+    try {
+      auth = getAuth(app);
+      db = getFirestore(app);
+      console.log('Firebase Auth和Firestore初始化成功');
+    } catch (error) {
+      console.warn('Firebase服务初始化失败:', error.message);
+    }
+  }
+} else {
+  console.warn('Firebase未配置，应用将以只读/离线模式运行');
 }
 
-// 3. 导出 Auth 和 Firestore 供 App.jsx 使用
-let auth, db;
-try {
-  auth = getAuth(app);
-  db = getFirestore(app);
-  console.log('Firebase Auth和Firestore初始化成功');
-} catch (error) {
-  console.error('Firebase服务初始化失败:', error);
-  throw new Error('无法初始化Firebase服务');
-}
-
-// 4. 安全导出（防止未初始化时使用）
 export { auth, db, analytics };
 export default app;
