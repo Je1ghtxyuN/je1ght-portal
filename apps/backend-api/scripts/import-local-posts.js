@@ -101,11 +101,13 @@ async function importLocalPosts() {
 
     const existing = await prisma.blogPost.findUnique({ where: { slug } })
 
+    let upsertResult = null
+
     if (existing) {
       // Compare file mtime with MySQL updatedAt — file wins if newer
       const dbUpdated = new Date(existing.updatedAt)
       if (fileMtime > dbUpdated) {
-        await prisma.blogPost.update({
+        upsertResult = await prisma.blogPost.update({
           where: { slug },
           data: {
             title,
@@ -123,7 +125,7 @@ async function importLocalPosts() {
         continue
       }
     } else {
-      await prisma.blogPost.create({
+      upsertResult = await prisma.blogPost.create({
         data: {
           slug,
           title,
@@ -140,15 +142,14 @@ async function importLocalPosts() {
       console.log(`import-local-posts: created "${slug}"`)
     }
 
-    // Re-read from DB to get canonical record, then rewrite .md with marker
-    const record = await prisma.blogPost.findUnique({ where: { slug } })
+    // Use the return value of create/update (already the canonical record)
+    const record = upsertResult
     if (record) {
       const md = postToFrontmatter(record) + '\n' + MANAGED_MARKER
       await writeFile(filePath, md, 'utf-8')
     }
   }
 
-  console.log(`import-local-posts: done (${imported} created, ${updated} updated)`)
   return { imported, updated }
 }
 
@@ -158,6 +159,7 @@ importLocalPosts()
     process.exit(0)
   })
   .catch((err) => {
-    console.error('import-local-posts error:', err.message)
+    console.error('import-local-posts error:', err.stack)
     process.exit(1)
   })
+  .finally(() => prisma.$disconnect())
