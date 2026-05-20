@@ -26,10 +26,6 @@ rsync -avz \
 rsync -avz \
   "$REPO_ROOT/apps/blog-portal/source/postimage/" \
   "$SERVER:$SERVER_PORTAL/source/postimage/" 2>&1 | tail -1
-rsync -avz \
-  "$REPO_ROOT/apps/blog-portal/source/_data/" \
-  "$SERVER:$SERVER_PORTAL/source/_data/" 2>&1 | tail -1
-
 # Phase b: import local posts into MySQL (skips already-managed files)
 ssh "$SERVER" "docker exec je1ght-backend-api node scripts/import-local-posts.js 2>&1" || true
 
