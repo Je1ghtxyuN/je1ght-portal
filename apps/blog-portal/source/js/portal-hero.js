@@ -2,6 +2,24 @@
   var page = document.querySelector('.type-portal-home')
   if (!page) return
 
+  // Smooth gradient transition from hero bg to content area
+  var style = document.createElement('style')
+  style.textContent = [
+    '.type-portal-home #page-header::after {',
+    '  content:"";',
+    '  position:absolute;',
+    '  bottom:0; left:0; right:0;',
+    '  height:120px;',
+    '  background:linear-gradient(to bottom, transparent, #0d0d0d);',
+    '  z-index:1;',
+    '  pointer-events:none;',
+    '}',
+    '[data-theme="light"] .type-portal-home #page-header::after {',
+    '  background:linear-gradient(to bottom, transparent, #ffffff);',
+    '}'
+  ].join('')
+  document.head.appendChild(style)
+
   var header = document.getElementById('page-header')
   if (!header) return
 
