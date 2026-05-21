@@ -640,29 +640,50 @@ postModal.addEventListener('drop', (e) => {
 
 // --- Assets ---
 async function loadAssets() {
-  const { avatar, icon, backgrounds, defaultBackground } = await api('/assets/admin/assets')
-  document.getElementById('asset-avatar-preview').src = avatar ? `/shared-assets/images/${avatar}` : ''
-  document.getElementById('asset-icon-preview').src = icon ? `/shared-assets/images/${icon}` : ''
+  try {
+    const { avatar, icon, backgrounds, defaultBackground } = await api('/assets/admin/assets')
+    document.getElementById('asset-avatar-preview').src = avatar ? `/shared-assets/images/${avatar}` : ''
+    document.getElementById('asset-icon-preview').src = icon ? `/shared-assets/images/${icon}` : ''
 
-  const grid = document.getElementById('asset-bg-grid')
-  grid.innerHTML = backgrounds.length
-    ? backgrounds.map(bg => `
-      <div class="asset-bg-card">
-        <img src="/shared-assets/images/backgrounds/${bg}" alt="${bg}">
-        <div class="asset-bg-card__name">${bg}${bg === defaultBackground ? ' (default)' : ''}</div>
-        <div class="asset-bg-card__actions">
-          <button class="btn btn-ghost btn-sm" onclick="setDefaultBg('${bg}')">Set Default</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteBg('${bg}')">Delete</button>
-        </div>
-      </div>`).join('')
-    : '<p style="color:#8b949e">No background images uploaded yet.</p>'
+    const grid = document.getElementById('asset-bg-grid')
+    grid.innerHTML = backgrounds.length
+      ? backgrounds.map(bg => `
+        <div class="asset-bg-card">
+          <img src="/shared-assets/images/backgrounds/${esc(bg)}" alt="${esc(bg)}">
+          <div class="asset-bg-card__name">${esc(bg)}${bg === defaultBackground ? ' (default)' : ''}</div>
+          <div class="asset-bg-card__actions">
+            <button class="btn btn-ghost btn-sm set-default-bg-btn" data-filename="${esc(bg)}">Set Default</button>
+            <button class="btn btn-danger btn-sm delete-bg-btn" data-filename="${esc(bg)}">Delete</button>
+          </div>
+        </div>`).join('')
+      : '<p style="color:#8b949e">No background images uploaded yet.</p>'
+
+    // Event delegation — avoids inline onclick XSS risk
+    grid.querySelectorAll('.set-default-bg-btn').forEach(btn => {
+      btn.addEventListener('click', () => setDefaultBg(btn.dataset.filename))
+    })
+    grid.querySelectorAll('.delete-bg-btn').forEach(btn => {
+      btn.addEventListener('click', () => deleteBg(btn.dataset.filename))
+    })
+  } catch (err) {
+    showToast('Failed to load assets: ' + err.message, 'error')
+    if (err.message.includes('Authentication required')) {
+      showView('login')
+    }
+  }
 }
 
 function uploadAsset(type) {
   const inputId = type === 'background' ? 'asset-bg-input' : `asset-${type}-input`
+  const btnId = type === 'background' ? 'asset-bg-upload' : `asset-${type}-upload`
   const input = document.getElementById(inputId)
+  const btn = document.getElementById(btnId)
   const files = input.files
   if (!files || files.length === 0) return
+
+  btn.disabled = true
+  const origText = btn.textContent
+  btn.textContent = 'Uploading...'
 
   const uploadFile = async (file) => {
     const form = new FormData()
@@ -686,14 +707,18 @@ function uploadAsset(type) {
       loadAssets()
     })
     .catch(err => showToast('Upload failed: ' + err.message, 'error'))
-    .finally(() => { input.value = '' })
+    .finally(() => {
+      input.value = ''
+      btn.disabled = false
+      btn.textContent = origText
+    })
 }
 
 document.getElementById('asset-avatar-upload').addEventListener('click', () => uploadAsset('avatar'))
 document.getElementById('asset-icon-upload').addEventListener('click', () => uploadAsset('icon'))
 document.getElementById('asset-bg-upload').addEventListener('click', () => uploadAsset('background'))
 
-window.setDefaultBg = async function (filename) {
+async function setDefaultBg(filename) {
   try {
     await api('/assets/admin/assets/set-default', {
       method: 'POST',
@@ -706,7 +731,7 @@ window.setDefaultBg = async function (filename) {
   }
 }
 
-window.deleteBg = async function (filename) {
+async function deleteBg(filename) {
   if (!confirm(`Delete "${filename}"?`)) return
   try {
     await api(`/assets/admin/assets/${filename}`, { method: 'DELETE' })
