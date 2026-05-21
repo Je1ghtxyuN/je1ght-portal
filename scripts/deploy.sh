@@ -40,6 +40,11 @@ rsync -avz \
   "$SERVER:$SERVER_PORTAL/source/_data/" \
   "$REPO_ROOT/apps/blog-portal/source/_data/" 2>&1 | tail -1
 
+# Pull back admin-uploaded brand assets (avatar, icon, backgrounds)
+rsync -avz \
+  "$SERVER:$SERVER_PORTAL/source/shared-assets/images/" \
+  "$REPO_ROOT/packages/shared-assets/images/" 2>&1 | tail -1
+
 echo "[2/5] Building Portal..."
 cd "$REPO_ROOT/apps/blog-portal"
 # Clear Hexo cache so stale db.json doesn't poison the build with old data
