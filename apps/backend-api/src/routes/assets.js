@@ -21,6 +21,10 @@ function getBackgroundsDir() {
   return join(getAssetsDir(), 'backgrounds')
 }
 
+function isValidBgFilename(name) {
+  return /^bg-\d+\.(jpg|jpeg|png|webp)$/i.test(name)
+}
+
 const BG_MAX_WIDTH = 1920
 const BG_QUALITY = 85
 const AVATAR_SIZE = 400
@@ -57,7 +61,7 @@ assets.get('/admin/assets', requireAuth(), async (c) => {
 
 // POST /api/admin/assets/upload — upload an asset
 assets.post('/admin/assets/upload', requireAuth(), async (c) => {
-  const body = await c.req.parseBody()
+  const body = await c.req.parseBody({ maxSize: 20 * 1024 * 1024 }) // 20MB
   const file = body.file
   const type = body.type || 'background'
 
@@ -73,6 +77,9 @@ assets.post('/admin/assets/upload', requireAuth(), async (c) => {
   try {
     const meta = await sharp(buf).metadata()
     if (!meta.width) throw new Error('invalid image')
+    if (meta.width > 8000 || meta.height > 8000) {
+      return c.json({ error: 'Image dimensions too large' }, 400)
+    }
   } catch {
     return c.json({ error: 'Invalid image file' }, 400)
   }
@@ -118,6 +125,10 @@ assets.delete('/admin/assets/:filename', requireAuth(), async (c) => {
     return c.json({ error: 'Cannot delete core asset. Replace it by uploading a new one.' }, 400)
   }
 
+  if (!isValidBgFilename(filename)) {
+    return c.json({ error: 'Invalid filename' }, 400)
+  }
+
   const backgroundsDir = getBackgroundsDir()
   const filePath = join(backgroundsDir, filename)
 
@@ -136,6 +147,10 @@ assets.post('/admin/assets/set-default', requireAuth(), async (c) => {
   const { filename } = body
 
   if (!filename) return c.json({ error: 'filename required' }, 400)
+
+  if (!isValidBgFilename(filename)) {
+    return c.json({ error: 'Invalid filename' }, 400)
+  }
 
   const backgroundsDir = getBackgroundsDir()
   const src = join(backgroundsDir, filename)
