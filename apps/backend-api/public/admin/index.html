@@ -40,6 +40,7 @@
         <button class="tab active" data-tab="posts">Blog Posts</button>
         <button class="tab" data-tab="portfolio">Portfolio</button>
         <button class="tab" data-tab="profile">Site Profile</button>
+        <button class="tab" data-tab="assets">Assets</button>
       </div>
 
       <!-- Blog Posts Tab -->
@@ -239,6 +240,44 @@
           </section>
         </div>
       </div>
+
+      <!-- Assets Tab -->
+<div id="tab-assets" class="tab-content">
+  <div class="asset-section">
+    <h3>Avatar</h3>
+    <div class="asset-upload-row">
+      <div class="input-with-preview">
+        <img id="asset-avatar-preview" class="img-preview" src="" alt="Avatar preview">
+      </div>
+      <div>
+        <input type="file" id="asset-avatar-input" accept="image/*">
+        <button class="btn btn-primary btn-sm" id="asset-avatar-upload">Upload Avatar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="asset-section">
+    <h3>Icon</h3>
+    <div class="asset-upload-row">
+      <div class="input-with-preview">
+        <img id="asset-icon-preview" class="img-preview img-preview--sm" src="" alt="Icon preview">
+      </div>
+      <div>
+        <input type="file" id="asset-icon-input" accept="image/*">
+        <button class="btn btn-primary btn-sm" id="asset-icon-upload">Upload Icon</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="asset-section">
+    <h3>Backgrounds</h3>
+    <div class="asset-upload-row">
+      <input type="file" id="asset-bg-input" accept="image/*" multiple>
+      <button class="btn btn-primary btn-sm" id="asset-bg-upload">Upload Backgrounds</button>
+    </div>
+    <div id="asset-bg-grid" class="asset-bg-grid"></div>
+  </div>
+</div>
 
       <!-- Post Editor Modal -->
       <div id="post-editor-modal" class="modal" style="display:none">

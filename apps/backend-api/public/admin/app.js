@@ -78,6 +78,7 @@ async function loadTab(name) {
   if (name === 'posts') await loadPosts()
   else if (name === 'portfolio') await loadPortfolio()
   else if (name === 'profile') await loadProfile()
+  else if (name === 'assets') await loadAssets()
 }
 
 // --- Blog Posts ---
@@ -636,6 +637,85 @@ postModal.addEventListener('drop', (e) => {
   const file = e.dataTransfer.files[0]
   if (file) handleMdFile(file)
 })
+
+// --- Assets ---
+async function loadAssets() {
+  const { avatar, icon, backgrounds, defaultBackground } = await api('/assets/admin/assets')
+  document.getElementById('asset-avatar-preview').src = avatar ? `/shared-assets/images/${avatar}` : ''
+  document.getElementById('asset-icon-preview').src = icon ? `/shared-assets/images/${icon}` : ''
+
+  const grid = document.getElementById('asset-bg-grid')
+  grid.innerHTML = backgrounds.length
+    ? backgrounds.map(bg => `
+      <div class="asset-bg-card">
+        <img src="/shared-assets/images/backgrounds/${bg}" alt="${bg}">
+        <div class="asset-bg-card__name">${bg}${bg === defaultBackground ? ' (default)' : ''}</div>
+        <div class="asset-bg-card__actions">
+          <button class="btn btn-ghost btn-sm" onclick="setDefaultBg('${bg}')">Set Default</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteBg('${bg}')">Delete</button>
+        </div>
+      </div>`).join('')
+    : '<p style="color:#8b949e">No background images uploaded yet.</p>'
+}
+
+function uploadAsset(type) {
+  const inputId = type === 'background' ? 'asset-bg-input' : `asset-${type}-input`
+  const input = document.getElementById(inputId)
+  const files = input.files
+  if (!files || files.length === 0) return
+
+  const uploadFile = async (file) => {
+    const form = new FormData()
+    form.append('file', file)
+    form.append('type', type)
+    const res = await fetch('/assets/admin/assets/upload', {
+      method: 'POST',
+      credentials: 'include',
+      body: form,
+    })
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.error || `HTTP ${res.status}`)
+    }
+    return res.json()
+  }
+
+  Promise.all(Array.from(files).map(uploadFile))
+    .then(() => {
+      showToast(`${files.length} file(s) uploaded`)
+      loadAssets()
+    })
+    .catch(err => showToast('Upload failed: ' + err.message, 'error'))
+    .finally(() => { input.value = '' })
+}
+
+document.getElementById('asset-avatar-upload').addEventListener('click', () => uploadAsset('avatar'))
+document.getElementById('asset-icon-upload').addEventListener('click', () => uploadAsset('icon'))
+document.getElementById('asset-bg-upload').addEventListener('click', () => uploadAsset('background'))
+
+window.setDefaultBg = async function (filename) {
+  try {
+    await api('/assets/admin/assets/set-default', {
+      method: 'POST',
+      body: JSON.stringify({ filename }),
+    })
+    showToast('Default background updated')
+    loadAssets()
+  } catch (err) {
+    showToast('Failed: ' + err.message, 'error')
+  }
+}
+
+window.deleteBg = async function (filename) {
+  if (!confirm(`Delete "${filename}"?`)) return
+  try {
+    await api(`/assets/admin/assets/${filename}`, { method: 'DELETE' })
+    showToast('Background deleted')
+    loadAssets()
+  } catch (err) {
+    showToast('Delete failed: ' + err.message, 'error')
+  }
+}
 
 // --- Init ---
 checkSession()
