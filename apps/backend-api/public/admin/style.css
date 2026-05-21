@@ -335,11 +335,40 @@ body {
   font-weight: 600;
 }
 
-.asset-section { margin-bottom: 2rem; }
-.asset-section h3 { margin: 0 0 1rem; font-size: 1rem; color: #e6edf3; }
-.asset-upload-row { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
-.asset-bg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+.asset-bg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; margin-top: 1rem; }
 .asset-bg-card { background: #161b22; border: 1px solid #30363d; border-radius: 6px; overflow: hidden; }
 .asset-bg-card img { width: 100%; height: 100px; object-fit: cover; }
 .asset-bg-card__name { padding: 0.4rem 0.6rem; font-size: 0.75rem; color: #8b949e; word-break: break-all; }
 .asset-bg-card__actions { padding: 0.4rem 0.6rem; display: flex; gap: 0.4rem; }
+
+/* Profile asset upload */
+.pf-asset-row {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+}
+.pf-asset-preview {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid #30363d;
+  flex-shrink: 0;
+  background: #161b22;
+}
+.pf-asset-preview--round { border-radius: 50%; }
+.pf-asset-preview--icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+}
+.pf-asset-upload { flex: 1; }
+.pf-asset-upload strong { display: block; margin-bottom: 0.25rem; font-size: 0.9rem; }
+.pf-asset-hint { display: block; font-size: 0.78rem; color: #8b949e; margin-bottom: 0.5rem; }
+.pf-asset-upload-row { display: flex; gap: 0.5rem; align-items: center; }
+.pf-asset-upload-row input[type="file"] { font-size: 0.82rem; color: #8b949e; }

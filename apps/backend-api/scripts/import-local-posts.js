@@ -1,10 +1,11 @@
-import { readFile, writeFile, readdir, stat } from 'node:fs/promises'
+import { readFile, writeFile, readdir, stat, unlink, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { prisma } from '../src/db/client.js'
 
 const MANAGED_MARKER = '<!-- managed-by-backend-api -->'
 
 const POSTS_DIR = join('/portal-source', 'source', '_posts')
+const DRAFTS_DIR = join('/portal-source', 'source', '_drafts')
 
 function yamlEscape(value) {
   if (value === null || value === undefined) return 'null'
@@ -153,11 +154,83 @@ async function importLocalPosts() {
   return { imported, updated }
 }
 
+async function importLocalDrafts() {
+  let files
+  try {
+    files = await readdir(DRAFTS_DIR)
+  } catch {
+    // _drafts dir may not exist yet — not an error
+    return { imported: 0 }
+  }
+
+  await mkdir(DRAFTS_DIR, { recursive: true })
+
+  let imported = 0
+
+  for (const file of files) {
+    // Only process .md files, skip already-imported ones
+    if (!file.endsWith('.md')) continue
+    if (file.endsWith('.imported')) continue
+
+    const filePath = join(DRAFTS_DIR, file)
+    let raw
+    try {
+      raw = await readFile(filePath, 'utf-8')
+    } catch {
+      continue
+    }
+
+    // Skip if already has managed marker
+    if (raw.includes(MANAGED_MARKER)) continue
+
+    const slug = file.replace(/\.md$/, '')
+    const frontmatter = parseFrontmatter(raw)
+    const bodyContent = raw.replace(/^---\n[\s\S]*?\n---\n?/, '')
+
+    const title = frontmatter.title || slug
+    const description = frontmatter.description || ''
+    const categories = Array.isArray(frontmatter.categories) ? frontmatter.categories : (frontmatter.categories ? [frontmatter.categories] : [])
+    const tags = Array.isArray(frontmatter.tags) ? frontmatter.tags : (frontmatter.tags ? [frontmatter.tags] : [])
+
+    // Check if already in DB
+    const existing = await prisma.blogPost.findUnique({ where: { slug } })
+    if (existing) {
+      console.log(`import-local-posts: skipped draft "${slug}" (already in DB)`)
+      // Already imported — clean up the original draft file
+      try { await unlink(filePath) } catch {}
+      continue
+    }
+
+    // Import as draft (unpublished)
+    const record = await prisma.blogPost.create({
+      data: {
+        slug,
+        title,
+        description,
+        content: bodyContent.trim(),
+        categories,
+        tags,
+        published: false,
+        publishedAt: frontmatter.date ? new Date(frontmatter.date) : new Date(),
+        createdAt: frontmatter.date ? new Date(frontmatter.date) : new Date(),
+      },
+    })
+    imported++
+    console.log(`import-local-posts: imported draft "${slug}"`)
+
+    // Source of truth is now MySQL. Clean up the original _drafts file.
+    // After Rebuild (publish), managed .md will be generated in _posts/.
+    try { await unlink(filePath) } catch {}
+  }
+
+  return { imported }
+}
+
 importLocalPosts()
-  .then((result) => {
-    console.log(`import-local-posts: ${result.imported} imported, ${result.updated} updated`)
+  .then((posts) => importLocalDrafts().then((drafts) => {
+    console.log(`import-local-posts: ${posts.imported} imported, ${posts.updated} updated, ${drafts.imported} drafts imported`)
     process.exit(0)
-  })
+  }))
   .catch((err) => {
     console.error('import-local-posts error:', err.stack)
     process.exit(1)

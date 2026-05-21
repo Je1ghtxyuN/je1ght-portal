@@ -40,7 +40,6 @@
         <button class="tab active" data-tab="posts">Blog Posts</button>
         <button class="tab" data-tab="portfolio">Portfolio</button>
         <button class="tab" data-tab="profile">Site Profile</button>
-        <button class="tab" data-tab="assets">Assets</button>
       </div>
 
       <!-- Blog Posts Tab -->
@@ -87,34 +86,46 @@
           <!-- Brand & Images -->
           <section class="profile-section">
             <h3>Brand & Images</h3>
+
+            <!-- Avatar -->
+            <div class="pf-asset-row">
+              <img id="pf-avatar-preview" class="pf-asset-preview pf-asset-preview--round" src="" alt="Avatar">
+              <div class="pf-asset-upload">
+                <strong>Avatar</strong>
+                <span class="pf-asset-hint">Upload a square image (recommended 400×400)</span>
+                <div class="pf-asset-upload-row">
+                  <input type="file" id="pf-avatar-input" accept="image/*">
+                  <button type="button" class="btn btn-primary btn-sm" id="pf-avatar-upload">Upload Avatar</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Icon -->
+            <div class="pf-asset-row">
+              <img id="pf-icon-preview" class="pf-asset-preview pf-asset-preview--icon" src="" alt="Icon">
+              <div class="pf-asset-upload">
+                <strong>Site Icon</strong>
+                <span class="pf-asset-hint">Upload a PNG icon (displayed as favicon and nav logo)</span>
+                <div class="pf-asset-upload-row">
+                  <input type="file" id="pf-icon-input" accept="image/*">
+                  <button type="button" class="btn btn-primary btn-sm" id="pf-icon-upload">Upload Icon</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subtitle -->
             <div class="form-group">
               <label for="pf-subtitle">Subtitle / Tagline</label>
               <input type="text" id="pf-subtitle">
             </div>
-            <div class="form-row">
-              <div class="form-group flex-1">
-                <label for="pf-avatar">Avatar Image Path</label>
-                <div class="input-with-preview">
-                  <input type="text" id="pf-avatar" placeholder="/shared-assets/images/profile.jpg">
-                  <img id="pf-avatar-preview" class="img-preview" src="" alt="Avatar preview">
-                </div>
-              </div>
-              <div class="form-group flex-1">
-                <label for="pf-icon">Site Icon Path</label>
-                <div class="input-with-preview">
-                  <input type="text" id="pf-icon" placeholder="/shared-assets/images/icon.png">
-                  <img id="pf-icon-preview" class="img-preview img-preview--sm" src="" alt="Icon preview">
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="pf-hero-bg">Hero Background Path</label>
-              <input type="text" id="pf-hero-bg" placeholder="/shared-assets/images/background.jpg">
-            </div>
+
+            <!-- Typewriter Phrases -->
             <div class="form-group">
               <label for="pf-hero-phrases">Typewriter Phrases (one per line)</label>
               <textarea id="pf-hero-phrases" rows="4" placeholder="Code, Anime, Games, and Coffee.&#10;VR, HCI, and game dev.&#10;Writing things down so I don't forget."></textarea>
             </div>
+
+            <!-- Site Dates -->
             <div class="form-row">
               <div class="form-group">
                 <label for="pf-started-date">Site Started Date</label>
@@ -125,6 +136,19 @@
                 <input type="number" id="pf-started-year" min="2000" max="2100">
               </div>
             </div>
+          </section>
+
+          <!-- Backgrounds -->
+          <section class="profile-section">
+            <h3>Hero Backgrounds</h3>
+            <div class="pf-asset-upload">
+              <span class="pf-asset-hint">Upload background images. The first one is used as the default. The hero section rotates through all backgrounds.</span>
+              <div class="pf-asset-upload-row">
+                <input type="file" id="pf-bg-input" accept="image/*" multiple>
+                <button type="button" class="btn btn-primary btn-sm" id="pf-bg-upload">Upload Backgrounds</button>
+              </div>
+            </div>
+            <div id="pf-bg-grid" class="asset-bg-grid"></div>
           </section>
 
           <!-- Intro -->
@@ -240,44 +264,6 @@
           </section>
         </div>
       </div>
-
-      <!-- Assets Tab -->
-<div id="tab-assets" class="tab-content">
-  <div class="asset-section">
-    <h3>Avatar</h3>
-    <div class="asset-upload-row">
-      <div class="input-with-preview">
-        <img id="asset-avatar-preview" class="img-preview" src="" alt="Avatar preview">
-      </div>
-      <div>
-        <input type="file" id="asset-avatar-input" accept="image/*">
-        <button class="btn btn-primary btn-sm" id="asset-avatar-upload">Upload Avatar</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="asset-section">
-    <h3>Icon</h3>
-    <div class="asset-upload-row">
-      <div class="input-with-preview">
-        <img id="asset-icon-preview" class="img-preview img-preview--sm" src="" alt="Icon preview">
-      </div>
-      <div>
-        <input type="file" id="asset-icon-input" accept="image/*">
-        <button class="btn btn-primary btn-sm" id="asset-icon-upload">Upload Icon</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="asset-section">
-    <h3>Backgrounds</h3>
-    <div class="asset-upload-row">
-      <input type="file" id="asset-bg-input" accept="image/*" multiple>
-      <button class="btn btn-primary btn-sm" id="asset-bg-upload">Upload Backgrounds</button>
-    </div>
-    <div id="asset-bg-grid" class="asset-bg-grid"></div>
-  </div>
-</div>
 
       <!-- Post Editor Modal -->
       <div id="post-editor-modal" class="modal" style="display:none">

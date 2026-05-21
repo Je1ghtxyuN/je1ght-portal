@@ -19,13 +19,22 @@ echo "[1/5] Bidirectional content sync..."
 mkdir -p "$REPO_ROOT/apps/blog-portal/source/postimage"
 ssh "$SERVER" "mkdir -p $SERVER_PORTAL/source/postimage"
 
-# Phase a: push local new/edited posts and images to server (no --delete, preserves both sides)
+# Phase a: push local new/edited posts, images, data files, and drafts to server
 rsync -avz \
   "$REPO_ROOT/apps/blog-portal/source/_posts/" \
   "$SERVER:$SERVER_PORTAL/source/_posts/" 2>&1 | tail -1
 rsync -avz \
   "$REPO_ROOT/apps/blog-portal/source/postimage/" \
   "$SERVER:$SERVER_PORTAL/source/postimage/" 2>&1 | tail -1
+rsync -avz \
+  "$REPO_ROOT/apps/blog-portal/source/_data/" \
+  "$SERVER:$SERVER_PORTAL/source/_data/" 2>&1 | tail -1
+# Sync drafts (no --delete, preserves both sides)
+mkdir -p "$REPO_ROOT/apps/blog-portal/source/_drafts"
+ssh "$SERVER" "mkdir -p $SERVER_PORTAL/source/_drafts"
+rsync -avz \
+  "$REPO_ROOT/apps/blog-portal/source/_drafts/" \
+  "$SERVER:$SERVER_PORTAL/source/_drafts/" 2>&1 | tail -1
 # Phase b: import local posts into MySQL (skips already-managed files)
 ssh "$SERVER" "docker exec je1ght-backend-api node scripts/import-local-posts.js 2>&1" || true
 
@@ -40,6 +49,10 @@ rsync -avz \
   "$SERVER:$SERVER_PORTAL/source/_data/" \
   "$REPO_ROOT/apps/blog-portal/source/_data/" 2>&1 | tail -1
 
+# Pull back server-side _drafts (includes renamed .imported files)
+rsync -avz \
+  "$SERVER:$SERVER_PORTAL/source/_drafts/" \
+  "$REPO_ROOT/apps/blog-portal/source/_drafts/" 2>&1 | tail -1
 # Pull back admin-uploaded brand assets (avatar, icon, backgrounds)
 rsync -avz \
   "$SERVER:$SERVER_PORTAL/source/shared-assets/images/" \
@@ -117,6 +130,9 @@ ssh "$SERVER" "cd $SERVER_DOCKER && docker compose build backend-api 2>&1 | tail
 # --- Sync admin credentials ---
 
 "$REPO_ROOT/scripts/sync-admin.sh" 2>/dev/null || true
+
+# --- Sync local site_profile.yml to MySQL ---
+ssh "$SERVER" "docker exec je1ght-backend-api node scripts/import-local-profile.js 2>&1" || true
 
 echo ""
 echo "========================================="
