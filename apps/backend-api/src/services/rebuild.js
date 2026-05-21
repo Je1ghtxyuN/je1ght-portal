@@ -158,7 +158,28 @@ export async function rebuildPortal() {
   // 2. Generate site_profile.yml
   const profile = await prisma.siteProfile.findUnique({ where: { id: 'default' } })
   if (profile?.data) {
-    const yamlContent = MANAGED_MARKER_YML + '\n' + toYaml(profile.data)
+    // Clone so we don't mutate cached DB data
+    const data = { ...profile.data }
+
+    // Auto-populate hero_backgrounds from filesystem
+    try {
+      const backgroundsDir = join(getPortalRoot(), 'source', 'shared-assets', 'images', 'backgrounds')
+      const bgFiles = await readdir(backgroundsDir)
+      const bgPaths = bgFiles
+        .filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f))
+        .sort()
+        .map(f => `/shared-assets/images/backgrounds/${f}`)
+      if (bgPaths.length > 0) {
+        data.hero_backgrounds = bgPaths
+      }
+    } catch { /* backgrounds dir may not exist yet — leave hero_backgrounds as-is */ }
+
+    // Default rotation interval
+    if (!data.hero_rotation_interval) {
+      data.hero_rotation_interval = 300
+    }
+
+    const yamlContent = MANAGED_MARKER_YML + '\n' + toYaml(data)
     await writeFile(join(dataDir, 'site_profile.yml'), yamlContent, 'utf-8')
   }
 
