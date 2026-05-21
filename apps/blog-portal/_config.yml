@@ -15,7 +15,7 @@ language:
   - ja
 timezone: Asia/Shanghai
 
-url: https://je1ghtxyun.github.io
+url: https://je1ght.top
 root: /
 permalink: posts/:title/
 permalink_defaults:
