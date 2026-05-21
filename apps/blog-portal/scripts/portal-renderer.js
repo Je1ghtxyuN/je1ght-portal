@@ -744,6 +744,8 @@ module.exports = function createPortalRenderer(hexo) {
       hero_phrases: Array.isArray(profile.hero_phrases) && profile.hero_phrases.length > 0
         ? profile.hero_phrases
         : ['Code, Anime, Games, and Coffee.', 'VR, HCI, and game dev.', "Writing things down so I don't forget."],
+      hero_backgrounds: Array.isArray(profile.hero_backgrounds) ? profile.hero_backgrounds : [],
+      hero_rotation_interval: typeof profile.hero_rotation_interval === 'number' ? profile.hero_rotation_interval : 300,
     }
     const heroDataJson = JSON.stringify(heroData)
     // Direct output to avoid HTML escaping JSON

@@ -36,7 +36,7 @@ subtitle:
 icon_path: /shared-assets/images/icon.png
 avatar_path: /shared-assets/images/profile.jpg
 footer_note: 
-hero_phrases: [落花人独立，微雨燕双飞]
+hero_phrases: [信仰是为了虚幻之人]
 social_links:
   - url: "https://github.com/Je1ghtxyuN"
     icon: fab fa-github
@@ -50,3 +50,5 @@ social_links:
 site_started_date: 2025-06-25
 site_started_year: 2025
 hero_background_path: /shared-assets/images/background.jpg
+hero_backgrounds: []
+hero_rotation_interval: 300

@@ -21,8 +21,8 @@
   if (siteTitle) siteTitle.style.display = 'none'
 
   // Replace "Home" with "Je1ghtxyuN" in the nav bar top-left (no translation)
-  var navSiteTitle = document.querySelector('#blog-info .nav-site-title')
-  if (navSiteTitle) navSiteTitle.textContent = 'Je1ghtxyuN'
+  var siteName = document.querySelector('#blog-info .site-name')
+  if (siteName) siteName.textContent = 'Je1ghtxyuN'
 
   // Create hero info container
   var heroInfo = document.createElement('div')
@@ -122,5 +122,19 @@
   var nav = header.querySelector('#nav')
   if (nav) {
     nav.classList.add('portal-nav-transparent')
+  }
+
+  // Background rotation
+  var backgrounds = data.hero_backgrounds || []
+  var rotationInterval = (data.hero_rotation_interval || 300) * 1000
+
+  if (backgrounds.length > 1) {
+    var bgIndex = 0
+    setInterval(function () {
+      bgIndex = (bgIndex + 1) % backgrounds.length
+      if (header) {
+        header.style.backgroundImage = 'url(' + backgrounds[bgIndex] + ')'
+      }
+    }, rotationInterval)
   }
 })()
