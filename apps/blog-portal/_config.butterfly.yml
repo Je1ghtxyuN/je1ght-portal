@@ -634,6 +634,14 @@ waline:
   # 使用 Waline 页面浏览计数作为页面浏览量
   pageview: false
   option:
+    login: disable
+    meta:
+      - nick
+      - mail
+      - link
+    requiredMeta:
+      - nick
+      - mail
 
 # Utterances 评论（未启用）
 # https://utteranc.es/
