@@ -24,6 +24,7 @@ hexo.extend.filter.register('before_generate', () => {
       '/portfolio/': 'portal.nav.portfolio',
       '/contact/': 'portal.nav.contact',
       '/about/': 'portal.nav.about',
+      '/link/': 'portal.nav.friends',
     },
   })
 
