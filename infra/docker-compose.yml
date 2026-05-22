@@ -17,10 +17,12 @@ services:
     image: lizheming/waline:latest
     container_name: je1ght-waline
     restart: unless-stopped
-    volumes:
-      - /home/je1ght/docker/je1ght-platform/waline-data:/app/data
     environment:
-      SQLITE_PATH: /app/data/waline.db
+      MYSQL_HOST: je1ght-mysql
+      MYSQL_PORT: 3306
+      MYSQL_DB: je1ght_space
+      MYSQL_USER: je1ght
+      MYSQL_PASSWORD: 2586
       JWT_TOKEN: ${WALINE_JWT_TOKEN}
       SITE_NAME: Je1ghtxyuN
       SITE_URL: https://je1ght.top
@@ -28,6 +30,7 @@ services:
       SECURE_DOMAINS: je1ght.top
     networks:
       - internet
+      - database_default
 
   nginx:
     image: nginx:alpine
