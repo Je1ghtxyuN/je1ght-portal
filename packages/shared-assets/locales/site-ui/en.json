@@ -55,9 +55,9 @@
       "about": "About"
     },
     "shortcuts": {
-      "blog": {
-        "label": "Blog",
-        "description": "Thoughts, tutorials, and technical writing."
+      "categories": {
+        "label": "Categories",
+        "description": "Browse posts by topic."
       },
       "portfolio": {
         "label": "Portfolio",

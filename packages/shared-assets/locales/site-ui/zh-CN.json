@@ -55,9 +55,9 @@
       "about": "关于"
     },
     "shortcuts": {
-      "blog": {
-        "label": "博客",
-        "description": "思考、教程与技术写作。"
+      "categories": {
+        "label": "分类",
+        "description": "按主题浏览文章。"
       },
       "portfolio": {
         "label": "作品集",

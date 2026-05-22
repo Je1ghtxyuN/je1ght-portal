@@ -55,9 +55,9 @@
       "about": "About"
     },
     "shortcuts": {
-      "blog": {
-        "label": "ブログ",
-        "description": "思考、チュートリアル、技術記事。"
+      "categories": {
+        "label": "カテゴリー",
+        "description": "トピック別に記事を閲覧。"
       },
       "portfolio": {
         "label": "ポートフォリオ",
