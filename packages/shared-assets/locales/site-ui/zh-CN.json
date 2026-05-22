@@ -126,6 +126,19 @@
       "messagePlaceholder": "简单介绍一下自己并写下你的消息",
       "sendButton": "发送消息"
     },
+    "sidebar": {
+      "recentPosts": "最新文章",
+      "contents": "目录",
+      "announcement": "公告",
+      "postSeries": "系列文章",
+      "tags": "标签",
+      "categories": "分类",
+      "archives": "归档",
+      "websiteInfo": "网站信息",
+      "aboutThisSite": "关于本站",
+      "search": "搜索",
+      "articles": "文章"
+    },
     "searchPlaceholder": "搜索..."
   },
   "studyRoom": {

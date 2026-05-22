@@ -26,6 +26,19 @@ hexo.extend.filter.register('before_generate', () => {
       '/about/': 'portal.nav.about',
       '/link/': 'portal.nav.friends',
     },
+    sidebarTextMap: {
+      'Recent Posts': 'portal.sidebar.recentPosts',
+      Contents: 'portal.sidebar.contents',
+      Announcement: 'portal.sidebar.announcement',
+      'Post Series': 'portal.sidebar.postSeries',
+      Tags: 'portal.sidebar.tags',
+      Categories: 'portal.sidebar.categories',
+      Archives: 'portal.sidebar.archives',
+      'Website Info': 'portal.sidebar.websiteInfo',
+      'About This Site': 'portal.sidebar.aboutThisSite',
+      Search: 'portal.sidebar.search',
+      Articles: 'portal.sidebar.articles',
+    },
   })
 
   const ensureInjectEntry = (entries = [], nextEntry) => {
@@ -127,4 +140,15 @@ hexo.extend.filter.register('before_generate', () => {
   )
 
   hexo.theme.config = themeConfig
+})
+
+// Disable comments on auto-generated listing pages (tags, categories, archives)
+hexo.extend.filter.register('before_generate', () => {
+  const pages = hexo.locals.get('pages')
+  if (!pages || !pages.each) return
+  pages.each((page) => {
+    if (page.type === 'tags' || page.type === 'categories' || page.layout === 'archive') {
+      page.comments = false
+    }
+  })
 })

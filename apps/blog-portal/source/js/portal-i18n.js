@@ -18,6 +18,7 @@
     ? config.supportedLocales
     : []
   const navMap = config.navMap || {}
+  const sidebarTextMap = config.sidebarTextMap || {}
   const localeCache = new Map()
   let activeLocale = defaultLocale
   let activeBundle = null
@@ -196,6 +197,36 @@
       })
   }
 
+  function applySidebarTranslations(bundle, fallbackBundle) {
+    // Translate card title spans inside .item-headline (exclude toc-percentage)
+    document.querySelectorAll('.item-headline > span:not(.toc-percentage)').forEach((el) => {
+      const text = (el.textContent || '').trim()
+      const key = sidebarTextMap[text]
+      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, text))
+    })
+
+    // Translate .headline spans inside .site-data (author card stats)
+    document.querySelectorAll('.site-data .headline, .card-webinfo .headline').forEach((el) => {
+      const text = (el.textContent || '').trim()
+      const key = sidebarTextMap[text]
+      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, text))
+    })
+
+    // Translate card-info button text
+    document.querySelectorAll('#card-info-btn > span').forEach((el) => {
+      const text = (el.textContent || '').trim()
+      const key = sidebarTextMap[text]
+      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, text))
+    })
+
+    // Translate search dialog title
+    document.querySelectorAll('.search-dialog-title').forEach((el) => {
+      const text = (el.textContent || '').trim()
+      const key = sidebarTextMap[text]
+      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, text))
+    })
+  }
+
   function applyCurrentLocaleToDynamicUi() {
     if (!activeBundle || !activeFallbackBundle) return
     applySearchPlaceholder(activeBundle, activeFallbackBundle)
@@ -297,6 +328,7 @@
 
     applyDataTranslations(nextLocaleBundle, fallbackLocaleBundle)
     applyNavigationTranslations(nextLocaleBundle, fallbackLocaleBundle)
+    applySidebarTranslations(nextLocaleBundle, fallbackLocaleBundle)
     applySearchPlaceholder(nextLocaleBundle, fallbackLocaleBundle)
 
     const select = ensureLocaleSwitcher()

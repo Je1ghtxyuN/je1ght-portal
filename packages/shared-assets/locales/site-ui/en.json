@@ -126,6 +126,19 @@
       "messagePlaceholder": "A short introduction and your message",
       "sendButton": "Send Message"
     },
+    "sidebar": {
+      "recentPosts": "Recent Posts",
+      "contents": "Contents",
+      "announcement": "Announcement",
+      "postSeries": "Post Series",
+      "tags": "Tags",
+      "categories": "Categories",
+      "archives": "Archives",
+      "websiteInfo": "Website Info",
+      "aboutThisSite": "About This Site",
+      "search": "Search",
+      "articles": "Articles"
+    },
     "searchPlaceholder": "Search..."
   },
   "studyRoom": {

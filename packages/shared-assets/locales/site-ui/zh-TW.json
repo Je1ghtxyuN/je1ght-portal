@@ -126,6 +126,19 @@
       "messagePlaceholder": "簡單介紹自己並寫下你的訊息",
       "sendButton": "傳送訊息"
     },
+    "sidebar": {
+      "recentPosts": "最新文章",
+      "contents": "目錄",
+      "announcement": "公告",
+      "postSeries": "系列文章",
+      "tags": "標籤",
+      "categories": "分類",
+      "archives": "封存",
+      "websiteInfo": "網站資訊",
+      "aboutThisSite": "關於本站",
+      "search": "搜尋",
+      "articles": "文章"
+    },
     "searchPlaceholder": "搜尋..."
   },
   "studyRoom": {

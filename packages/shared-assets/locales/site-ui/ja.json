@@ -126,6 +126,19 @@
       "messagePlaceholder": "簡単な自己紹介とメッセージを書いてください",
       "sendButton": "メッセージを送信"
     },
+    "sidebar": {
+      "recentPosts": "最近の投稿",
+      "contents": "目次",
+      "announcement": "お知らせ",
+      "postSeries": "連載記事",
+      "tags": "タグ",
+      "categories": "カテゴリ",
+      "archives": "アーカイブ",
+      "websiteInfo": "サイト情報",
+      "aboutThisSite": "このサイトについて",
+      "search": "検索",
+      "articles": "記事"
+    },
     "searchPlaceholder": "検索..."
   },
   "studyRoom": {

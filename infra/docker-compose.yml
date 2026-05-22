@@ -13,6 +13,19 @@ services:
       - database_default
       - internet
 
+  waline:
+    image: lizheming/waline:latest
+    container_name: je1ght-waline
+    restart: unless-stopped
+    volumes:
+      - /home/je1ght/docker/je1ght-platform/waline-data:/app/data
+    environment:
+      SQLITE_PATH: /app/data/waline.db
+      JWT_TOKEN: ${WALINE_JWT_TOKEN}
+      SITE_NAME: Je1ghtxyuN
+    networks:
+      - internet
+
   nginx:
     image: nginx:alpine
     container_name: je1ght-nginx

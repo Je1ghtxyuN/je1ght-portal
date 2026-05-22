@@ -18,7 +18,7 @@ nav:
   # 是否在导航栏显示网站标题
   display_title: true
   # 是否在文章页导航栏显示文章标题
-  display_post_title: true
+  display_post_title: false
   # 是否固定导航栏（滚动时不隐藏）
   fixed: true
 
@@ -324,7 +324,7 @@ aside:
   card_author:
     enable: true
     # 🔧 描述 — 目前写死，未被 portal-data-sync 覆盖
-    description: Code, anime, games, and coffee.
+    description: 信仰是为了虚幻之人
     button:
       enable: true
       icon: fas fa-user-circle
@@ -470,7 +470,7 @@ copy:
 
 # 字数统计（需要安装 hexo-wordcount 插件）
 wordcount:
-  enable: false
+  enable: true
   # 文章元信息中显示字数
   post_wordcount: true
   # 显示阅读时间（分钟）
@@ -480,8 +480,8 @@ wordcount:
 
 # 不蒜子访问统计
 busuanzi:
-  site_uv: false
-  site_pv: false
+  site_uv: true
+  site_pv: true
   page_pv: false
 
 # --------------------------------------
@@ -563,13 +563,13 @@ comments:
   # 评论系统: Disqus / Disqusjs / Livere / Gitalk / Valine / Waline / Utterances /
   #           Facebook Comments / Twikoo / Giscus / Remark42 / Artalk
   # 最多两个，用逗号分隔。留空 = 禁用
-  use:
+  use: Waline
   # 按钮旁显示评论系统名称
   text: true
   # 懒加载：评论框进入视口时才加载
-  lazyload: false
+  lazyload: true
   # 文章顶部图片中显示评论数
-  count: false
+  count: true
   # 首页文章卡片显示评论数
   card_post_count: false
 
@@ -626,10 +626,10 @@ valine:
   visitor: false
   option:
 
-# Waline 评论（未启用）
+# Waline 评论
 # https://waline.js.org/
 waline:
-  serverURL:
+  serverURL: https://je1ght.top/waline
   bg:
   # 使用 Waline 页面浏览计数作为页面浏览量
   pageview: false
@@ -997,7 +997,7 @@ snackbar:
   bg_dark: '#1f1f1f'
 
 # Instant.page（鼠标悬停时预加载链接，提升感知速度）
-instantpage: false
+instantpage: true
 
 # 图片懒加载
 lazyload:
