@@ -18,7 +18,6 @@ hexo.extend.filter.register('before_generate', () => {
     supportedLocales,
     navMap: {
       '/': 'portal.nav.home',
-      '/blog/': 'portal.nav.blog',
       '/archives/': 'portal.nav.archives',
       '/categories/': 'portal.nav.categories',
       '/portfolio/': 'portal.nav.portfolio',
