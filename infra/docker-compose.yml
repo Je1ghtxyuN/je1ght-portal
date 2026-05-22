@@ -23,6 +23,9 @@ services:
       SQLITE_PATH: /app/data/waline.db
       JWT_TOKEN: ${WALINE_JWT_TOKEN}
       SITE_NAME: Je1ghtxyuN
+      SITE_URL: https://je1ght.top
+      SERVER_URL: https://je1ght.top/waline
+      SECURE_DOMAINS: je1ght.top
     networks:
       - internet
 
