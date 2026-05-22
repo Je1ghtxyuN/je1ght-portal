@@ -29,6 +29,7 @@ menu:
   Categories: /categories/ || fas fa-folder-open
   Portfolio: /portfolio/ || fas fa-laptop-code
   Contact: /contact/ || fas fa-envelope
+  Friends: /link/ || fas fa-user-group
   About: /about/ || fas fa-id-card
 
 # --------------------------------------
@@ -39,7 +40,7 @@ code_blocks:
   # 代码高亮主题: darker / pale night / light / ocean / false
   theme: darker
   # macOS 风格圆点按钮
-  macStyle: true
+  macStyle: false
   # 代码块高度限制（单位 px），false = 不限制
   height_limit: false
   # 代码块自动换行
@@ -64,10 +65,10 @@ social:
 # 图片与品牌资源
 # --------------------------------------
 
-# 🔧 网站图标（favicon）— Admin Assets → Icon 管理
+# 🔧 网站图标（favicon）— Admin Site Profile → Icon 管理
 favicon: /shared-assets/images/icon.png
 
-# 🔧 头像 — Admin Assets → Avatar 管理
+# 🔧 头像 — Admin Site Profile → Avatar 管理
 avatar:
   img: /shared-assets/images/profile.jpg
   # 头像旋转动效
@@ -76,7 +77,7 @@ avatar:
 # 禁用所有页面横幅图片
 disable_top_img: false
 
-# 🔧 页面默认顶部图片 — Admin Assets → Backgrounds 管理（portal-data-sync.js 覆盖）
+# 🔧 页面默认顶部图片 — Admin Site Profile → Backgrounds 管理（portal-data-sync.js 覆盖）
 default_top_img: /shared-assets/images/background.jpg
 
 # 🔧 首页顶部图片（portal-data-sync.js 覆盖）

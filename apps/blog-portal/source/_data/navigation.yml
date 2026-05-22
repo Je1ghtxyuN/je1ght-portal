@@ -24,6 +24,10 @@ items:
     path: /contact/
     icon: fas fa-envelope
     external: false
+  - label: Friends
+    path: /link/
+    icon: fas fa-user-group
+    external: false
   - label: About
     path: /about/
     icon: fas fa-id-card

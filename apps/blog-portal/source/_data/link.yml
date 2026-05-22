@@ -1,0 +1,30 @@
+# =============================================================================
+# 友链数据文件
+# 格式说明:
+#   - class_name: 友链分组名（可选，不写则不分组）
+#   - class_desc: 分组描述（可选）
+#   - link_list: 该分组下的友链列表
+#     - name: 网站名称（必填）
+#     - link: 网站链接（必填）
+#     - avatar: 头像图片 URL（必填）
+#     - descr: 网站描述（可选）
+# =============================================================================
+
+- class_name: "我的朋友们"
+  class_desc: ""
+  link_list:
+    - name: "dieWehmut"
+      link: "https://diesw.tech/"
+      avatar: "https://github.com/dieWehmut.png"
+      descr: "NJU IST"
+    - name: "fugod"
+      link: "https://fufu142857.github.io/"
+      avatar: "https://github.com/fufu142857.png"
+      descr: "ZJU Turing"
+# - class_name: "组织"
+#   class_desc: ""
+#   link_list:
+#     - name: "PVEUG"
+#       link: "https://diesw.tech/"
+#       avatar: "https://github.com/dieWehmut.png"
+#       descr: ""
