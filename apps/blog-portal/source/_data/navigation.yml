@@ -36,9 +36,9 @@ home_shortcuts:
   title: Explore
   description: ""
   items:
-    - label: Blog
-      path: /blog/
-      icon: fas fa-feather-pointed
+    - label: Categories
+      path: /categories/
+      icon: fas fa-folder-open
       external: false
       description: ""
     - label: Portfolio

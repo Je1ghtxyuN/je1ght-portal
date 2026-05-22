@@ -410,8 +410,8 @@ module.exports = function createPortalRenderer(hexo) {
         shortcutItems
           .map((item) => {
             const shortcutKey =
-              item.path === '/blog/'
-                ? 'blog'
+              item.path === '/categories/'
+                ? 'categories'
                 : item.path === '/portfolio/'
                   ? 'portfolio'
                   : item.path === '/contact/'
