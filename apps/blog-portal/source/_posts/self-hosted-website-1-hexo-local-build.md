@@ -1,5 +1,6 @@
 ---
 title: 从零自建网站（一）Hexo 本地构建与项目结构
+date: 2026-05-21 12:00:00
 description: 系列第一篇：为什么选择 Hexo，Butterfly 主题的安装与配置，monorepo 项目结构拆解，以及如何本地写文章、配置多语言、实时预览
 categories:
   - Engineering
@@ -11,7 +12,6 @@ tags:
   - 自托管
   - 博客
   - 静态网站
-cover: /postimage/self-hosted-website/IMG_3993.JPG
 ---
 
 ## 为什么搭博客
@@ -312,3 +312,4 @@ npm run clean        # 实际执行: hexo clean
 ## 小结
 
 本地能跑起来就行。下一篇讲怎么初始化一台 Ubuntu 服务器——SSH 登录、装 Docker，为后面部署做准备。
+<!-- managed-by-backend-api -->

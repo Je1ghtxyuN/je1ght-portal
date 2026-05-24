@@ -29,10 +29,10 @@ rsync -avz \
 rsync -avz \
   "$REPO_ROOT/apps/blog-portal/source/_data/" \
   "$SERVER:$SERVER_PORTAL/source/_data/" 2>&1 | tail -1
-# Sync drafts (no --delete, preserves both sides)
+# Sync drafts with --delete so published drafts (moved to _posts) are cleaned up server-side
 mkdir -p "$REPO_ROOT/apps/blog-portal/source/_drafts"
 ssh "$SERVER" "mkdir -p $SERVER_PORTAL/source/_drafts"
-rsync -avz \
+rsync -avz --delete \
   "$REPO_ROOT/apps/blog-portal/source/_drafts/" \
   "$SERVER:$SERVER_PORTAL/source/_drafts/" 2>&1 | tail -1
 # Phase b: import local posts into MySQL (skips already-managed files)
