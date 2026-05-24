@@ -127,6 +127,73 @@
   box-shadow: none !important;
 }
 
+/* Music player button in rightside — matches darkmode toggle exactly */
+#portal-music-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--font-color);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#portal-music-btn:hover,
+.portal-music-btn--active {
+  background: var(--theme-color);
+  color: #fff;
+}
+
+/* --- Music player floating panel --- */
+
+#portal-music-panel {
+  position: fixed;
+  bottom: 175px;
+  right: 12px;
+  z-index: 998;
+  width: 330px;
+  max-width: calc(100vw - 16px);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: var(--card-box-shadow);
+  overflow: hidden;
+}
+
+/* Match panel bg + text color to site theme (APlayer handles its own layout) */
+#portal-music-panel .aplayer {
+  background: var(--card-bg);
+  color: var(--font-color);
+}
+
+/* Hidden state — opacity (not display:none) so APlayer can measure its
+   container width at init and stays out of arrow mode */
+.portal-music-panel--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Narrow state — when playlist is folded via miniswitcher, shrink panel
+   to fit just the album art + controls instead of leaving empty space */
+#portal-music-panel.portal-music-panel--narrow {
+  width: auto;
+}
+
+/* Hide APlayer's loading notice (semi-transparent white capsule) everywhere */
+#portal-music-panel .aplayer-notice {
+  display: none;
+}
+
+/* Hide play button only when collapsed */
+#portal-music-panel.portal-music-panel--narrow .aplayer-button {
+  display: none;
+}
+
 /* Language button in rightside gear menu — matches darkmode toggle exactly */
 #locale-switch-btn {
   display: inline-flex;

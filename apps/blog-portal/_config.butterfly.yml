@@ -944,9 +944,9 @@ abcjs:
 
 # Mermaid 图表
 mermaid:
-  enable: false
+  enable: true
   # true = 直接在 Markdown 代码块中写 mermaid（不需要 tag 插件）
-  code_write: false
+  code_write: true
   # 内置主题: default / forest / dark / neutral
   theme:
     light: default
@@ -991,9 +991,9 @@ pjax:
   exclude:
     # - /xxxxxx/
 
-# APlayer / Meting 音乐播放器
+# APlayer / Meting 音乐播放器（全局底部固定迷你播放器）
 aplayerInject:
-  enable: false
+  enable: true
   per_page: true
 
 # Snackbar 提示条（切换暗色模式/简繁时的提示）
@@ -1063,6 +1063,13 @@ inject:
   bottom:
     # 自定义 Hero 脚本（首页打字机效果、头像、背景旋转）
     - <script src="/js/portal-hero.js?v=BUILD_VER" defer></script>
+    # 自定义音乐播放器脚本（右下角悬浮按钮 + 浮窗面板）
+    - <script src="/js/portal-music-player.js?v=BUILD_VER" defer></script>
+    # 全局音乐播放器 — STUDY WITH MIKU 网易云歌单（由 portal-music-player.js 接管放入浮窗）
+    # 注意：butterfly-extsrc 版 MetingJS 使用 div.aplayer + data-* 属性，不是 <meting-js>
+    - <div class="aplayer no-destroy" data-server="netease" data-type="playlist" data-id="17688647005" data-autoplay="false" data-theme="#49B1F5" data-loop="all" data-order="random" data-preload="auto" data-volume="0.7"></div>
+    # 兜底调用：MetingJS 注册的 DOMContentLoaded 可能已经错过，window.onload 时补调
+    - <script>window.addEventListener('load',function(){if(typeof loadMeting==='function')loadMeting();});</script>
 
 # --------------------------------------
 # CDN 设置（不要修改除非你清楚其含义）
@@ -1083,6 +1090,10 @@ CDN:
   option:
     # Font Awesome 图标库（使用 gcore.jsdelivr.net 以优化中国大陆访问）
     fontawesome: https://gcore.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css
+    # APlayer/MetingJS 音乐播放器（同样走 gcore 加速大陆访问）
+    aplayer_css: https://gcore.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css
+    aplayer_js: https://gcore.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js
+    meting_js: https://gcore.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js
     # 以下 CDN 选项可按需自定义，参考 node_modules/hexo-theme-butterfly/_config.yml 完整列表
     # algolia_search, aplayer, busuanzi, canvas_nest, chartjs, click_heart, disqusjs
     # fancybox, fireworks, gitalk, giscus, instantpage, katex, lazyload, local_search

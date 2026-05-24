@@ -198,32 +198,42 @@
   }
 
   function applySidebarTranslations(bundle, fallbackBundle) {
+    // Resolve the i18n key for a sidebar element.  On first call we match the
+    // visible text against sidebarTextMap (which has English keys).  Once
+    // resolved, the key is persisted in a data attribute so subsequent calls
+    // still work even after the visible text has been translated.
+    function resolveKey(el) {
+      var key = el.getAttribute('data-i18n-sidebar-key')
+      if (key) return key
+
+      var text = (el.textContent || '').trim()
+      key = sidebarTextMap[text]
+      if (key) el.setAttribute('data-i18n-sidebar-key', key)
+      return key || ''
+    }
+
     // Translate card title spans inside .item-headline (exclude toc-percentage)
-    document.querySelectorAll('.item-headline > span:not(.toc-percentage)').forEach((el) => {
-      const text = (el.textContent || '').trim()
-      const key = sidebarTextMap[text]
-      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, text))
+    document.querySelectorAll('.item-headline > span:not(.toc-percentage)').forEach(function (el) {
+      var key = resolveKey(el)
+      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, ''))
     })
 
     // Translate .headline spans inside .site-data (author card stats)
-    document.querySelectorAll('.site-data .headline, .card-webinfo .headline').forEach((el) => {
-      const text = (el.textContent || '').trim()
-      const key = sidebarTextMap[text]
-      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, text))
+    document.querySelectorAll('.site-data .headline, .card-webinfo .headline').forEach(function (el) {
+      var key = resolveKey(el)
+      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, ''))
     })
 
     // Translate card-info button text
-    document.querySelectorAll('#card-info-btn > span').forEach((el) => {
-      const text = (el.textContent || '').trim()
-      const key = sidebarTextMap[text]
-      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, text))
+    document.querySelectorAll('#card-info-btn > span').forEach(function (el) {
+      var key = resolveKey(el)
+      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, ''))
     })
 
     // Translate search dialog title
-    document.querySelectorAll('.search-dialog-title').forEach((el) => {
-      const text = (el.textContent || '').trim()
-      const key = sidebarTextMap[text]
-      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, text))
+    document.querySelectorAll('.search-dialog-title').forEach(function (el) {
+      var key = resolveKey(el)
+      if (key) setTextContent(el, translate(bundle, fallbackBundle, key, ''))
     })
   }
 
@@ -313,7 +323,17 @@
     return select
   }
 
+  var _applyLocaleChain = Promise.resolve()
+
   async function applyLocale(locale) {
+    // Serialize calls: prevent concurrent fetches from overwriting each other.
+    // Without this, two rapid switches can race — the second call to finish
+    // applies its translations but then gets stomped by the slower first one.
+    _applyLocaleChain = _applyLocaleChain.then(function () { return _applyLocaleImpl(locale) })
+    return _applyLocaleChain
+  }
+
+  async function _applyLocaleImpl(locale) {
     const normalizedLocale = normalizeLocale(locale)
     const [fallbackLocaleBundle, nextLocaleBundle] = await Promise.all([
       loadLocaleBundle(defaultLocale),

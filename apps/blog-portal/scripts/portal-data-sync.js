@@ -126,10 +126,8 @@ hexo.extend.filter.register('before_generate', () => {
     ? themeConfig.inject.bottom.slice()
     : []
 
-  themeConfig.inject.head = ensureInjectEntry(
-    headInject,
-    '<link rel="stylesheet" href="/css/portal-custom.css">',
-  )
+  // portal-custom.css is injected via _config.butterfly.yml inject.head with BUILD_VER
+  themeConfig.inject.head = headInject
   themeConfig.inject.bottom = ensureInjectEntry(
     ensureInjectEntry(
       bottomInject,

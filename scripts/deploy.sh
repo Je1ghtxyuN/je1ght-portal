@@ -49,7 +49,7 @@ rsync -avz \
   "$SERVER:$SERVER_PORTAL/source/_data/" \
   "$REPO_ROOT/apps/blog-portal/source/_data/" 2>&1 | tail -1
 
-# Pull back server-side _drafts (includes renamed .imported files)
+# Pull back server-side _drafts
 rsync -avz \
   "$SERVER:$SERVER_PORTAL/source/_drafts/" \
   "$REPO_ROOT/apps/blog-portal/source/_drafts/" 2>&1 | tail -1
@@ -120,8 +120,8 @@ ssh "$SERVER" "cd $SERVER_PORTAL && npm install --silent 2>&1 | tail -1"
 rsync -avz "$REPO_ROOT/infra/docker-compose.yml" "$SERVER:$SERVER_DOCKER/" 2>&1 | tail -1
 rsync -avz "$REPO_ROOT/infra/nginx/default.conf" "$SERVER:$SERVER_DOCKER/nginx/" 2>&1 | tail -1
 
-# Disable conflicting generator on server (source/index.md + tag handles homepage)
-ssh "$SERVER" "mv $SERVER_PORTAL/scripts/portal-home-generator.js $SERVER_PORTAL/scripts/portal-home-generator.js.disabled 2>/dev/null" || true
+# Homepage mode: custom template uses scripts/portal-home-generator.js
+# To switch to Butterfly default: npm run home:default (moves generator to scripts/_disabled/)
 
 # Fix root-owned files from Docker, then full restart (not just recreate)
 ssh "$SERVER" "docker exec je1ght-backend-api chown -R 1000:1000 /portal-source/public/ 2>/dev/null" || true

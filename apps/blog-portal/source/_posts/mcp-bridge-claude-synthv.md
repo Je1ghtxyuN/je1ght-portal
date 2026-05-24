@@ -18,23 +18,17 @@ tags:
 
 Phase 1 学到了 MCP Tool 机制，Phase 2 理解了 SVP 文件格式。Phase 3 将两者连接：
 
-```
-Claude (自然语言)
-  │
-  ▼
-MCP Protocol (JSON-RPC over stdio)
-  │
-  ▼
-synthv-mcp Server
-  ├── create_svp_project
-  ├── inspect_svp_project
-  ├── list_svp_notes
-  ├── add_note_to_svp
-  ├── set_svp_render_filename
-  └── midi_info
-  │
-  ▼
-.svp 工程文件 (JSON on disk)
+```mermaid
+graph TD
+  A["Claude (自然语言)"] --> B["MCP Protocol<br/>(JSON-RPC over stdio)"]
+  B --> C["synthv-mcp Server"]
+  C --> D["create_svp_project"]
+  C --> E["inspect_svp_project"]
+  C --> F["list_svp_notes"]
+  C --> G["add_note_to_svp"]
+  C --> H["set_svp_render_filename"]
+  C --> I["midi_info"]
+  D & E & F & G & H & I --> J[".svp 工程文件<br/>(JSON on disk)"]
 ```
 
 这是整个项目的核心——**让 AI 的操作能力真正落地到音乐工程中**。
@@ -137,18 +131,23 @@ MIDI 音高参考表，帮助 AI 选择合适的音域。
 
 AI 内部执行链：
 
-```
-1. midi_info() → 了解音域
-2. create_svp_project(
-     path="/tmp/c_major.svp",
-     bpm=130.0,
-     voice_name="Kasane Teto (Lite)"
-   )
-3. add_note_to_svp(path="...", onset_beats=0, duration_beats=1, pitch=60, lyrics="do")
-4. add_note_to_svp(path="...", onset_beats=1, duration_beats=1, pitch=64, lyrics="mi")
-5. add_note_to_svp(path="...", onset_beats=2, duration_beats=1, pitch=67, lyrics="sol")
-6. add_note_to_svp(path="...", onset_beats=3, duration_beats=2, pitch=72, lyrics="do!")
-7. list_svp_notes(path="...") → 验证结果
+```mermaid
+sequenceDiagram
+  participant U as 用户
+  participant A as Claude
+  participant S as synthv-mcp Server
+
+  U->>A: "创建 130BPM C大调琶音练习"
+  A->>S: midi_info()
+  S-->>A: 音域信息
+  A->>S: create_svp_project(bpm=130, voice="Kasane Teto")
+  S-->>A: 工程已创建
+  A->>S: add_note_to_svp(pitch=60, lyrics="do")
+  A->>S: add_note_to_svp(pitch=64, lyrics="mi")
+  A->>S: add_note_to_svp(pitch=67, lyrics="sol")
+  A->>S: add_note_to_svp(pitch=72, lyrics="do!")
+  A->>S: list_svp_notes()
+  S-->>A: 验证结果
 ```
 
 执行结果：生成 4 个音符的 C 大调琶音，保存为 `/tmp/c_major.svp`，双击即可在 SynthV 中播放。

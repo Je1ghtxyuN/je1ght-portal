@@ -29,19 +29,10 @@ MCP 让 AI（如 Claude）可以**发现和调用外部工具**——读文件�
 
 ### 三个角色
 
-```
-┌──────────┐      MCP Protocol      ┌──────────────┐
-│  Client  │ ◄──────────────────► │  Server       │
-│ (Claude) │    JSON-RPC over      │ (你的代码)    │
-│          │    stdio / HTTP       │              │
-└──────────┘                       └──────────────┘
-                                         │
-                                         ▼
-                                  ┌──────────────┐
-                                  │  外部系统     │
-                                  │ (文件/数据库/  │
-                                  │  API/应用)    │
-                                  └──────────────┘
+```mermaid
+graph LR
+  A["Client<br/>(Claude)"] <-->|"MCP Protocol<br/>JSON-RPC over stdio/HTTP"| B["Server<br/>(你的代码)"]
+  B --> C["外部系统<br/>(文件/数据库/API/应用)"]
 ```
 
 - **Client（客户端）**：AI 模型这边。发起工具调用请求。
@@ -52,12 +43,10 @@ MCP 让 AI（如 Claude）可以**发现和调用外部工具**——读文件�
 
 MCP Server 不是 HTTP 服务器——不需要端口，不需要 URL。
 
-```
-Claude Code 启动 Server 子进程
-      │
-      ├─► stdin  → Server（发 JSON-RPC 指令）
-      │
-      └─◄ stdout ← Server（返回 JSON-RPC 结果）
+```mermaid
+graph TD
+  A["Claude Code 启动 Server 子进程"] --> B["stdin → Server<br/>(发 JSON-RPC 指令)"]
+  A --> C["stdout ← Server<br/>(返回 JSON-RPC 结果)"]
 ```
 
 Server 的 `print()` / `logging` 必须走 **stderr**，因为 **stdout 被 JSON-RPC 协议独占**。
