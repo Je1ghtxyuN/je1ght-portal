@@ -48,3 +48,15 @@ test('portal components provide standalone light and dark typography tokens', ()
   assert.match(tokens, /--portal-heading-font/)
   assert.match(tokens, /--portal-body-font/)
 })
+
+test('footer follows Portal light and dark theme tokens', () => {
+  const tokens = fs.readFileSync(path.join(cssRoot, 'tokens.css'), 'utf8')
+  const base = fs.readFileSync(path.join(cssRoot, 'base.css'), 'utf8')
+
+  assert.match(tokens, /:root[\s\S]*--portal-footer-bg/)
+  assert.match(tokens, /\[data-theme='dark'\][\s\S]*--portal-footer-bg/)
+  assert.match(base, /#footer[\s\S]*background:\s*var\(--portal-footer-bg\)/)
+  assert.match(base, /#footer[\s\S]*color:\s*var\(--portal-footer-text\)/)
+  assert.match(base, /border-top:\s*1px solid var\(--portal-footer-border\)/)
+  assert.doesNotMatch(base, /#footer\s*\{[^}]*background:\s*#[0-9a-f]{3,8}/i)
+})

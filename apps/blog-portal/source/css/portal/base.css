@@ -59,11 +59,17 @@ textarea {
 }
 
 #footer {
-  background: #162833;
+  border-top: 1px solid var(--portal-footer-border);
+  background: var(--portal-footer-bg);
+  color: var(--portal-footer-text);
 }
 
-[data-theme='dark'] #footer {
-  background: #081019;
+#footer :where(a, .footer_custom_text, #site-running-time) {
+  color: inherit;
+}
+
+#footer :where(.framework-info, .footer-other, .copyright) {
+  color: var(--portal-footer-muted);
 }
 
 .type-portal-home #page,
