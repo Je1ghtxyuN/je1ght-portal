@@ -34,11 +34,12 @@ test('Butterfly taxonomy visuals are isolated and injected after shared componen
 test('Butterfly category and tag detail pages use taxonomy visuals', () => {
   const css = fs.readFileSync(adapterPath, 'utf8')
 
-  const sharedDetailScope = /#body-wrap\.category,\s*#body-wrap\.tag/g
+  const sharedDetailScope =
+    /#body-wrap:has\(#category\),\s*#body-wrap:has\(#tag\)/g
   assert.equal(css.match(sharedDetailScope)?.length, 7)
   assert.match(
     css,
-    /#body-wrap\.category\s+#category,\s*#body-wrap\.tag\s+#tag/,
+    /#body-wrap:has\(#category\)\s+#category,\s*#body-wrap:has\(#tag\)\s+#tag/,
   )
   assert.match(
     css,
@@ -59,5 +60,8 @@ test('theme-independent layers do not contain Butterfly taxonomy selectors', () 
     )
     .join('\n')
 
-  assert.doesNotMatch(shared, /#body-wrap:has\(#archive\)|\.type-categories|\.type-tags/)
+  assert.doesNotMatch(
+    shared,
+    /#body-wrap:has\(#(?:archive|category|tag)\)|\.type-categories|\.type-tags/,
+  )
 })
