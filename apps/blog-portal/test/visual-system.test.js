@@ -17,3 +17,25 @@ test('visual system is split into explicit layers with accessibility fallbacks',
   assert.match(combined, /prefers-reduced-motion:\s*reduce/)
   assert.match(combined, /64svh/)
 })
+
+test('hero uses a circular crop and CSS does not generate visible copy', () => {
+  const hero = fs.readFileSync(path.join(cssRoot, 'hero.css'), 'utf8')
+
+  assert.match(
+    hero,
+    /\.portal-hero-info__avatar[\s\S]*border-radius:\s*50%/,
+  )
+  assert.match(hero, /\.portal-hero-info__avatar[\s\S]*object-fit:\s*cover/)
+  assert.match(hero, /\.portal-hero-info__avatar[\s\S]*aspect-ratio:\s*1/)
+  assert.doesNotMatch(hero, /PERSONAL NOTES|SELECTED WORK/)
+  assert.doesNotMatch(hero, /content:\s*['"][A-Za-z]/)
+})
+
+test('portal components provide standalone light and dark typography tokens', () => {
+  const tokens = fs.readFileSync(path.join(cssRoot, 'tokens.css'), 'utf8')
+
+  assert.match(tokens, /:root[\s\S]*--portal-bg/)
+  assert.match(tokens, /\[data-theme='dark'\][\s\S]*--portal-bg/)
+  assert.match(tokens, /--portal-heading-font/)
+  assert.match(tokens, /--portal-body-font/)
+})

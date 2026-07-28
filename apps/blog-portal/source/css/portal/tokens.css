@@ -1,4 +1,6 @@
 :root {
+  --portal-heading-font: Georgia, 'Times New Roman', serif;
+  --portal-body-font: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --theme-color: #2f716b;
   --theme-color-op: rgb(47 113 107 / 12%);
   --portal-accent: #2f716b;

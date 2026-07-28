@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: var(--portal-space-6);
   padding-block: var(--portal-space-3) var(--portal-space-5);
+  font-family: var(--portal-body-font);
 }
 
 .portal-section {
@@ -22,7 +23,7 @@
 .portal-section > h2 {
   margin: 0;
   color: var(--portal-text);
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: var(--portal-heading-font);
   font-size: clamp(1.8rem, 4vw, 2.75rem);
   font-weight: 500;
   letter-spacing: -.035em;
@@ -254,6 +255,25 @@
   border-radius: var(--portal-radius-md);
   background: var(--portal-surface-strong);
   box-shadow: var(--portal-shadow);
+  color: var(--portal-text);
+  font-family: var(--portal-body-font);
+}
+
+.portal-generic-toolbar {
+  position: fixed;
+  z-index: 998;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  padding: .35rem;
+  border: 1px solid var(--portal-border);
+  border-radius: var(--portal-radius-md);
+  background: var(--portal-surface-strong);
+  box-shadow: var(--portal-shadow);
+}
+
+#locale-dropdown[hidden] {
+  display: none;
 }
 
 #portal-music-panel {

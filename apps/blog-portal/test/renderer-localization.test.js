@@ -64,6 +64,6 @@ test('renderer does not emit decorative owner copy', () => {
 
   assert.doesNotMatch(
     html,
-    /Directory|Journal|Profile|Say hello|Selected work/,
+    /Directory|Journal|Profile|Say hello|Selected work|Code, Anime|VR, HCI/,
   )
 })

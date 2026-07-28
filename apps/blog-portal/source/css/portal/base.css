@@ -8,6 +8,7 @@ body {
     radial-gradient(circle at 92% 72%, rgb(162 84 114 / 6%), transparent 30rem),
     var(--portal-bg);
   color: var(--portal-text);
+  font-family: var(--portal-body-font);
 }
 
 ::selection {
@@ -41,6 +42,12 @@ textarea {
 
 #article-container {
   color: var(--portal-text);
+}
+
+#article-container :where(h1, h2),
+.article-title,
+.page-title {
+  font-family: var(--portal-heading-font);
 }
 
 #article-container :where(p, li) {

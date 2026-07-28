@@ -46,44 +46,40 @@
 .portal-hero-info {
   position: relative;
   z-index: 2;
-  display: grid;
-  width: min(68rem, calc(100% - 3rem));
+  display: flex;
+  width: min(42rem, calc(100% - 2rem));
   align-items: center;
-  gap: clamp(1.5rem, 4vw, 4rem);
-  grid-template-columns: auto minmax(0, 1fr);
+  flex-direction: column;
+  gap: var(--portal-space-3);
   color: #fff;
+  text-align: center;
 }
 
 .portal-hero-info__avatar {
-  width: clamp(7.5rem, 14vw, 10.5rem);
-  border: 1px solid rgb(255 255 255 / 34%);
-  border-radius: 35% 65% 54% 46% / 47% 42% 58% 53%;
+  width: clamp(6.75rem, 13vw, 8.75rem);
+  border: 2px solid rgb(255 255 255 / 42%);
+  border-radius: 50%;
   aspect-ratio: 1;
-  box-shadow: 0 24px 60px rgb(0 0 0 / 36%);
+  box-shadow: 0 16px 44px rgb(0 0 0 / 32%);
   object-fit: cover;
 }
 
 .portal-hero-info__text {
   display: flex;
   max-width: 42rem;
+  align-items: center;
   flex-direction: column;
   gap: var(--portal-space-2);
-}
-
-.portal-hero-info__text::before {
-  color: #a7ddd7;
-  content: 'PERSONAL NOTES / SELECTED WORK';
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .18em;
+  text-align: center;
 }
 
 .portal-hero-info__name {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(2.7rem, 7vw, 5.7rem);
+  margin: 0;
+  font-family: var(--portal-heading-font);
+  font-size: clamp(2.4rem, 7vw, 4.4rem);
   font-weight: 500;
-  letter-spacing: -.045em;
-  line-height: .94;
+  letter-spacing: -.035em;
+  line-height: 1;
   text-wrap: balance;
 }
 

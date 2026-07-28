@@ -16,9 +16,7 @@ module.exports = function renderHome(context, { siteLocals } = {}) {
     avatar_path: text(profile.avatar_path, '/shared-assets/images/profile.jpg'),
     intro_short: text(profile.intro?.short),
     intro_long: text(profile.intro?.long),
-    hero_phrases: array(profile.hero_phrases).length
-      ? profile.hero_phrases
-      : ['Code, Anime, Games, and Coffee.', 'VR, HCI, and game dev.'],
+    hero_phrases: array(profile.hero_phrases),
     hero_backgrounds: array(profile.hero_backgrounds),
     hero_rotation_interval:
       typeof profile.hero_rotation_interval === 'number' ? profile.hero_rotation_interval : 300,

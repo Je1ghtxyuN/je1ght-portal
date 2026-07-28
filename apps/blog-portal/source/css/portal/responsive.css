@@ -7,17 +7,15 @@
 
   .portal-hero-info {
     width: min(32rem, calc(100% - 2rem));
-    justify-items: start;
     gap: var(--portal-space-3);
-    grid-template-columns: 1fr;
   }
 
   .portal-hero-info__avatar {
-    width: 5.75rem;
+    width: 6.75rem;
   }
 
   .portal-hero-info__name {
-    font-size: clamp(2.65rem, 14vw, 4.25rem);
+    font-size: clamp(2.35rem, 13vw, 3.6rem);
   }
 
   .portal-scroll-hint {

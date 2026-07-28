@@ -33,7 +33,7 @@
   var textGroup = document.createElement('div')
   textGroup.className = 'portal-hero-info__text'
 
-  var name = document.createElement('div')
+  var name = document.createElement('h1')
   name.className = 'portal-hero-info__name'
   name.textContent = displayName
 
@@ -55,7 +55,7 @@
   var scrollHint = document.createElement('button')
   scrollHint.className = 'portal-scroll-hint'
   scrollHint.type = 'button'
-  scrollHint.textContent = 'Read the latest ↓'
+  scrollHint.innerHTML = '<span data-ui-key="home.scroll">Read the latest</span> <span aria-hidden="true">↓</span>'
   scrollHint.addEventListener('click', function () {
     var main = document.getElementById('content-inner')
     if (main) main.scrollIntoView({ behavior: motionAllowed ? 'smooth' : 'auto' })
