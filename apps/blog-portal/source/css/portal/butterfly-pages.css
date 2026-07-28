@@ -1,0 +1,88 @@
+:where(
+  #body-wrap:has(#archive),
+  #body-wrap.type-categories,
+  #body-wrap.type-tags
+) #page-header {
+  position: relative;
+  height: 260px;
+  background-position: center 33%;
+}
+
+:where(
+  #body-wrap:has(#archive),
+  #body-wrap.type-categories,
+  #body-wrap.type-tags
+) #page-header::after {
+  position: absolute;
+  z-index: 1;
+  height: 5.5rem;
+  background: linear-gradient(to bottom, transparent, var(--portal-bg));
+  content: '';
+  inset: auto 0 0;
+  pointer-events: none;
+}
+
+:where(
+  #body-wrap:has(#archive),
+  #body-wrap.type-categories,
+  #body-wrap.type-tags
+) #page-header #page-site-info {
+  z-index: 2;
+}
+
+:where(
+  #body-wrap:has(#archive),
+  #body-wrap.type-categories,
+  #body-wrap.type-tags
+) #site-title {
+  color: #fff;
+  font-family: var(--portal-heading-font);
+  font-size: clamp(2.4rem, 6vw, 4.1rem);
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+
+:where(
+  #body-wrap:has(#archive) #archive,
+  #body-wrap.type-categories #page,
+  #body-wrap.type-tags #page
+) {
+  border: 1px solid var(--portal-border);
+  border-radius: var(--portal-radius-lg);
+  background: var(--portal-surface);
+  box-shadow: var(--portal-shadow);
+}
+
+:where(
+  #body-wrap:has(#archive),
+  #body-wrap.type-categories,
+  #body-wrap.type-tags
+) :where(
+  .article-sort-title,
+  .article-sort-item.year,
+  .article-sort-item-title,
+  .category-list-link,
+  .tag-cloud-list a
+) {
+  font-family: var(--portal-heading-font);
+}
+
+:where(
+  #body-wrap:has(#archive),
+  #body-wrap.type-categories,
+  #body-wrap.type-tags
+) :where(.card-widget, #archive, #page) {
+  border-color: var(--portal-border);
+  background-color: var(--portal-surface);
+  color: var(--portal-text);
+}
+
+@media (max-width: 768px) {
+  :where(
+    #body-wrap:has(#archive),
+    #body-wrap.type-categories,
+    #body-wrap.type-tags
+  ) #page-header {
+    height: 210px;
+  }
+}

@@ -1047,11 +1047,13 @@ css_prefix: true
 # 向 <head> 和 <body> 底部注入自定义 CSS / JS
 inject:
   head:
-    # Portal CSS 分层：令牌 → 基础 → Hero → 组件 → 响应式
+    # Portal CSS 分层：令牌 → 基础 → Hero → 组件 → Butterfly 页面适配器 → 响应式
     - <link rel="stylesheet" href="/css/portal/tokens.css?v=BUILD_VER">
     - <link rel="stylesheet" href="/css/portal/base.css?v=BUILD_VER">
     - <link rel="stylesheet" href="/css/portal/hero.css?v=BUILD_VER">
     - <link rel="stylesheet" href="/css/portal/components.css?v=BUILD_VER">
+    # Butterfly 页面结构视觉适配器，可在更换主题时整体替换
+    - <link rel="stylesheet" href="/css/portal/butterfly-pages.css?v=BUILD_VER">
     - <link rel="stylesheet" href="/css/portal/responsive.css?v=BUILD_VER">
   bottom:
     # 自定义 Hero 脚本（首页打字机效果、头像、背景旋转）
