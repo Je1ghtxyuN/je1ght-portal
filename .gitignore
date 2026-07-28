@@ -44,3 +44,6 @@ credentials.json
 
 # Development screenshots (not needed in remote)
 screenshots/
+
+# Local Git worktrees
+.worktrees/
