@@ -94,3 +94,10 @@ test('admin login has branded and accessible sign-in structure', () => {
   assert.match(html, /id="login-error"[^>]*aria-live="polite"/)
   assert.match(html, /id="login-submit"/)
 })
+
+test('admin assets use a versioned URL to escape cached historical 404 responses', () => {
+  const html = fs.readFileSync(path.join(root, 'public/admin/index.html'), 'utf8')
+
+  assert.match(html, /style\.css\?v=[a-z0-9._-]+/)
+  assert.match(html, /app\.js\?v=[a-z0-9._-]+/)
+})
