@@ -27,6 +27,7 @@ function projectThemeConfig({
   themeConfig,
   profile = {},
   navigation = {},
+  portfolio = {},
   buildVersion = 'dev',
   portalI18nConfig = {},
   searchPlaceholder = 'Search articles, pages, and project notes...',
@@ -64,8 +65,10 @@ function projectThemeConfig({
 
   if (Array.isArray(navigation.items) && navigation.items.length) {
     projected.menu = {}
+    const hasPortfolio = Array.isArray(portfolio.cards) && portfolio.cards.length > 0
     for (const item of navigation.items) {
       if (!item?.label || !item?.path) continue
+      if (item.path === '/portfolio/' && !hasPortfolio) continue
       projected.menu[item.label] = `${item.path} || ${item.icon || 'fas fa-link'}`
     }
   }

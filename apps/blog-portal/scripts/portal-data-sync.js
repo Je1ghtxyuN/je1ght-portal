@@ -10,6 +10,7 @@ hexo.extend.filter.register('before_generate', () => {
   const data = hexo.locals.get('data') || {}
   const profile = data.site_profile || {}
   const navigation = data.navigation || {}
+  const portfolio = data.portfolio || {}
   const portalI18nConfig = {
     defaultLocale,
     storageKey: 'site-locale',
@@ -43,6 +44,7 @@ hexo.extend.filter.register('before_generate', () => {
     themeConfig: hexo.theme.config || {},
     profile,
     navigation,
+    portfolio,
     buildVersion: process.env.PORTAL_BUILD_VERSION || 'dev',
     portalI18nConfig,
     searchPlaceholder: getDefaultLocaleText(
