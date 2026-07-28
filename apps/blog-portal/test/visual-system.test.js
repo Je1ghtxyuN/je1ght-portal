@@ -31,6 +31,15 @@ test('hero uses a circular crop and CSS does not generate visible copy', () => {
   assert.doesNotMatch(hero, /content:\s*['"][A-Za-z]/)
 })
 
+test('hero foreground remains legible in both site themes', () => {
+  const hero = fs.readFileSync(path.join(cssRoot, 'hero.css'), 'utf8')
+
+  assert.match(
+    hero,
+    /\.type-portal-home \.portal-hero-info__name\s*\{[^}]*color:\s*#fff/,
+  )
+})
+
 test('portal components provide standalone light and dark typography tokens', () => {
   const tokens = fs.readFileSync(path.join(cssRoot, 'tokens.css'), 'utf8')
 
