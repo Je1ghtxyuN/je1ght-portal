@@ -39,6 +39,9 @@ credentials.json
 # Claude Code
 .claude/
 
+# Superpowers visual companion sessions
+.superpowers/
+
 # Playwright MCP artifacts
 .playwright-mcp/
 
