@@ -982,7 +982,7 @@ pjax:
 
 # APlayer / Meting 音乐播放器（全局底部固定迷你播放器）
 aplayerInject:
-  enable: true
+  enable: false
   per_page: true
 
 # Snackbar 提示条（切换暗色模式/简繁时的提示）
@@ -1052,13 +1052,8 @@ inject:
   bottom:
     # 自定义 Hero 脚本（首页打字机效果、头像、背景旋转）
     - <script src="/js/portal-hero.js?v=BUILD_VER" defer></script>
-    # 自定义音乐播放器脚本（右下角悬浮按钮 + 浮窗面板）
+    # 自定义音乐播放器脚本；APlayer/Meting 仅在用户首次点击后加载
     - <script src="/js/portal-music-player.js?v=BUILD_VER" defer></script>
-    # 全局音乐播放器 — STUDY WITH MIKU 网易云歌单（由 portal-music-player.js 接管放入浮窗）
-    # 注意：butterfly-extsrc 版 MetingJS 使用 div.aplayer + data-* 属性，不是 <meting-js>
-    - <div class="aplayer no-destroy" data-server="netease" data-type="playlist" data-id="17688647005" data-autoplay="false" data-theme="#49B1F5" data-loop="all" data-order="random" data-preload="auto" data-volume="0.7"></div>
-    # 兜底调用：MetingJS 注册的 DOMContentLoaded 可能已经错过，window.onload 时补调
-    - <script>window.addEventListener('load',function(){if(typeof loadMeting==='function')loadMeting();});</script>
 
 # --------------------------------------
 # CDN 设置（不要修改除非你清楚其含义）
