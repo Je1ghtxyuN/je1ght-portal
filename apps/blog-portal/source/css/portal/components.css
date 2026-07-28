@@ -224,20 +224,6 @@
   resize: vertical;
 }
 
-.portal-contact-honeypot {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-}
-
-.portal-contact-status {
-  min-height: 1.5em;
-  margin: 0;
-  color: var(--portal-muted);
-}
-
 #portal-music-btn,
 #locale-switch-btn {
   display: inline-flex;

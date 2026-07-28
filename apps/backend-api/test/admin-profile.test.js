@@ -13,10 +13,12 @@ test('nginx gives Admin assets priority over generic CSS and JS locations', () =
   assert.match(nginx, /location \^~ \/admin\/\s*\{/)
 })
 
-test('admin profile editor does not expose deprecated Formspree settings', () => {
+test('admin profile editor owns the Formspree endpoint setting', () => {
   const html = fs.readFileSync(path.join(root, 'public/admin/index.html'), 'utf8')
   const script = fs.readFileSync(path.join(root, 'public/admin/app.js'), 'utf8')
 
-  assert.doesNotMatch(html, /pf-contact-formspree|Formspree/i)
-  assert.doesNotMatch(script, /pf-contact-formspree|formspree_endpoint/i)
+  assert.match(html, /id="pf-contact-formspree"/)
+  assert.match(html, /Formspree Endpoint/i)
+  assert.match(script, /pf-contact-formspree/)
+  assert.match(script, /formspree_endpoint/)
 })

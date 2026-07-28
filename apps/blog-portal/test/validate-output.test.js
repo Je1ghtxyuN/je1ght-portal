@@ -61,7 +61,7 @@ test('reports unresolved internal links and assets', async () => {
 
 test('accepts valid internal links and assets', async () => {
   const root = await createSite({
-    'index.html': '<html lang="en"><head><title>Home</title><link rel="canonical" href="https://je1ght.top/"></head><body><a href="/about/">About</a><link href="/css/site.css"></body></html>',
+    'index.html': '<html lang="en"><head><title>Home</title><link rel="canonical" href="https://je1ght.top/"></head><body><a href="/about/">About</a><link href="/css/site.css"><form action="https://formspree.io/f/example" method="post"></form></body></html>',
     'about/index.html': '<html lang="en"><head><title>About</title><link rel="canonical" href="https://je1ght.top/about/"></head></html>',
     'css/site.css': '',
   })

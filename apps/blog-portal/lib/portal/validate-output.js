@@ -58,10 +58,6 @@ function validateHtmlDocument({ html, file, publicDir }) {
   if (html.includes('api.yourdomain.com')) {
     errors.push(`${displayPath}: contains placeholder API domain`)
   }
-  if (/formspree\.io/i.test(html)) {
-    errors.push(`${displayPath}: contains Formspree endpoint`)
-  }
-
   const lang = html.match(/<html\b[^>]*\blang=(["'])(.*?)\1/i)?.[2] || ''
   if (!/^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/.test(lang)) {
     errors.push(`${displayPath}: invalid primary language "${lang}"`)

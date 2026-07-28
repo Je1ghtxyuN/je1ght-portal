@@ -31,6 +31,7 @@ contact:
   email: honorxyun@gmail.com
   location: "Nanjing, Jiangsu, China"
   availability_note: "Best for project discussions, collaboration ideas, and technical conversations."
+  formspree_endpoint: "https://formspree.io/f/mkgbpnbb"
 subtitle: 
 icon_path: /shared-assets/images/icon.png
 avatar_path: /shared-assets/images/profile.jpg

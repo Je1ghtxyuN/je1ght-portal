@@ -100,3 +100,36 @@ test('theme projection omits empty portfolio from the primary menu', () => {
   assert.deepEqual(Object.keys(withoutProjects.menu), ['Home'])
   assert.deepEqual(Object.keys(withProjects.menu), ['Home', 'Portfolio'])
 })
+
+test('contact renderer posts directly to the configured Formspree endpoint', () => {
+  const renderer = createPortalRenderer(
+    createHexo({
+      site_profile: {
+        contact: {
+          email: 'person@example.com',
+          formspree_endpoint: 'https://formspree.io/f/example',
+        },
+      },
+    }),
+  )
+
+  const html = renderer.renderContact()
+
+  assert.match(html, /action="https:\/\/formspree\.io\/f\/example"/)
+  assert.match(html, /method="post"/)
+  assert.doesNotMatch(html, /action="\/api\/contact"/)
+})
+
+test('contact renderer does not invent a submission target when Formspree is missing', () => {
+  const renderer = createPortalRenderer(
+    createHexo({
+      site_profile: { contact: { email: 'person@example.com' } },
+    }),
+  )
+
+  const html = renderer.renderContact()
+
+  assert.match(html, /portal-contact-unavailable/)
+  assert.doesNotMatch(html, /<form\b/)
+  assert.doesNotMatch(html, /formspree\.io|\/api\/contact/)
+})

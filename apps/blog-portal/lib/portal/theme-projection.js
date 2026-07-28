@@ -99,12 +99,6 @@ function projectThemeConfig({
     `<script src="/js/portal-i18n.js?v=${encodeURIComponent(buildVersion)}" defer></script>`,
     '/js/portal-i18n.js',
   )
-  bottom = appendUnique(
-    bottom,
-    `<script src="/js/portal-contact.js?v=${encodeURIComponent(buildVersion)}" defer></script>`,
-    '/js/portal-contact.js',
-  )
-
   projected.inject.head = head
   projected.inject.bottom = bottom
   return projected

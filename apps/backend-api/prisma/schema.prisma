@@ -77,16 +77,3 @@ model MediaAsset {
 
   @@index([filename])
 }
-
-model ContactMessage {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  topic     String
-  message   String   @db.Text
-  ipHash    String
-  createdAt DateTime @default(now())
-
-  @@index([createdAt])
-  @@index([email])
-}

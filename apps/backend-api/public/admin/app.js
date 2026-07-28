@@ -369,6 +369,7 @@ async function loadProfile() {
   setVal('pf-contact-email', getVal(p, 'contact.email'))
   setVal('pf-contact-location', getVal(p, 'contact.location'))
   setVal('pf-contact-note', getVal(p, 'contact.availability_note'))
+  setVal('pf-contact-formspree', getVal(p, 'contact.formspree_endpoint'))
 
   // About
   setVal('pf-about-title', getVal(p, 'about.intro_title', 'About Me'))
@@ -415,6 +416,7 @@ async function saveProfile() {
       email: readVal('pf-contact-email'),
       location: readVal('pf-contact-location'),
       availability_note: readVal('pf-contact-note'),
+      formspree_endpoint: readVal('pf-contact-formspree'),
     },
     about: {
       intro_title: readVal('pf-about-title'),

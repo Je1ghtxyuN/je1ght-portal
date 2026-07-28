@@ -34,7 +34,7 @@ test('site profile snapshot round-trips nested and special values', () => {
   assert.deepEqual(yaml.load(serialized), profile)
 })
 
-test('site profile snapshot drops deprecated third-party form endpoints', () => {
+test('site profile snapshot preserves the Admin-owned Formspree endpoint', () => {
   const profile = {
     contact: {
       email: 'person@example.com',
@@ -43,12 +43,8 @@ test('site profile snapshot drops deprecated third-party form endpoints', () => 
   }
   const serialized = serializeSiteProfile(profile)
 
-  assert.deepEqual(yaml.load(serialized), {
-    contact: { email: 'person@example.com' },
-  })
-  assert.deepEqual(normalizeSiteProfile(profile), {
-    contact: { email: 'person@example.com' },
-  })
+  assert.deepEqual(yaml.load(serialized), profile)
+  assert.deepEqual(normalizeSiteProfile(profile), profile)
 })
 
 test('portfolio snapshot normalizes database items', () => {
