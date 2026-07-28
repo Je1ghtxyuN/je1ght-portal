@@ -135,7 +135,9 @@ rsync -avz "$REPO_ROOT/infra/nginx/je1ght.top.conf" "$SERVER:$SERVER_OPENRESTY_S
 ssh "$SERVER" "docker exec je1ght-backend-api chown -R 1000:1000 /portal-source/public/ 2>/dev/null" || true
 ssh "$SERVER" "grep -q '^WALINE_DB_PASSWORD=' $SERVER_DOCKER/.env"
 ssh "$SERVER" "cd $SERVER_DOCKER && docker compose build backend-api 2>&1 | tail -3 && docker compose up -d --no-deps backend-api waline 2>&1 | tail -3"
-ssh "$SERVER" "curl --fail --silent --show-error http://127.0.0.1:3001/health >/dev/null"
+# Container creation can complete a few seconds before Node begins accepting
+# connections. Retry the loopback health check before touching the edge config.
+ssh "$SERVER" "for attempt in 1 2 3 4 5 6 7 8 9 10; do if curl --fail --silent http://127.0.0.1:3001/health >/dev/null 2>&1; then exit 0; fi; sleep 2; done; echo 'backend-api health check timed out' >&2; exit 1"
 
 # 1Panel OpenResty is the production edge. Install its versioned site config
 # atomically, validate the complete configuration, then reload without downtime.

@@ -62,6 +62,8 @@ test('deploy updates the real OpenResty site without stopping the full stack', (
   assert.match(deploy, /SERVER_OPENRESTY_STAGING/)
   assert.doesNotMatch(deploy, /SERVER_OPENRESTY_CONF\.next/)
   assert.match(deploy, /docker compose up -d --no-deps backend-api/)
+  assert.match(deploy, /for attempt in 1 2 3 4 5 6 7 8 9 10/)
+  assert.match(deploy, /sleep 2/)
   assert.match(deploy, /openresty -t/)
   assert.match(deploy, /openresty -s reload/)
   assert.doesNotMatch(deploy, /docker compose down/)
