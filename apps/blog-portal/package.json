@@ -8,8 +8,9 @@
     "clean": "hexo clean",
     "deploy": "hexo deploy",
     "test": "node --test test/*.test.js",
+    "test:generated-output": "PORTAL_BUILD_VERSION=$(git rev-parse --short HEAD) npm run build && PORTAL_BUILD_VERSION=$(git rev-parse --short HEAD) node --test test/generated-output/butterfly-pages-output.test.js",
     "validate": "node lib/portal/validate-output.js public",
-    "check": "npm test && npm run build && npm run validate"
+    "check": "npm test && npm run test:generated-output && npm run validate"
   },
   "hexo": {
     "version": "7.3.0"
