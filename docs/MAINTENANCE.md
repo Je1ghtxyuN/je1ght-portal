@@ -32,9 +32,12 @@ Do not edit generated `public/` files.
 | Navigation and homepage shortcuts | `source/_data/navigation.yml` |
 | Manual posts and drafts | `source/_posts/`, `source/_drafts/` |
 | Renderer behavior | `lib/portal/render/` |
-| Theme projection | `lib/portal/theme-projection.js` |
+| Butterfly build projection | `lib/portal/adapters/butterfly-theme-projection.js` |
 | Visual tokens and layers | `source/css/portal/` |
-| Browser behavior | `source/js/portal-*.js` |
+| Theme-independent locale behavior | `source/js/portal-locale-core.js` |
+| Butterfly DOM/PJAX bridge | `source/js/adapters/butterfly-adapter.js` |
+| Theme-independent music behavior | `source/js/portal-music-player.js` |
+| Public interface translations | `packages/shared-assets/locales/portal-ui/` |
 | Contact form destination | Admin → Site Profile → `contact.formspree_endpoint` |
 | Admin UI | `apps/backend-api/public/admin/` |
 | Origin routes | `infra/nginx/default.conf` |
@@ -42,6 +45,36 @@ Do not edit generated `public/` files.
 Profile fields projected into Butterfly are intentionally blank in
 `_config.butterfly.yml`. Editing those blank placeholders does not work because
 `portal-data-sync.js` derives their values during generation.
+
+## Interface language versus authored content
+
+The `portal-ui` catalogs contain only interface chrome: navigation, page and
+section labels, form labels and placeholders, search, empty states, accessible
+control names, and music wrapper states. All four catalogs must have identical
+nonempty keys; `test/locale-catalog.test.js` enforces the contract.
+
+Articles, titles, profile text, skills, experience, project descriptions,
+categories, tags, contact availability notes, and the homepage subtitle are
+authored content. The runtime locale switch never rewrites them. Add future
+content translations as explicit language-specific Hexo source files or
+routes, not as entries in `portal-ui`.
+
+## Replacing Butterfly
+
+The public portal is split across theme-independent components and two
+Butterfly adapters. To use another Hexo theme:
+
+1. replace `source/js/adapters/butterfly-adapter.js` with an adapter for the new
+   theme's navigation, search, PJAX, and control mount points;
+2. replace `lib/portal/adapters/butterfly-theme-projection.js` with the new
+   theme's build-time configuration projection;
+3. add the new theme configuration file and update the Hexo `theme` setting;
+4. keep the renderer, `portal-ui` catalogs, locale core, music controller,
+   content snapshots, and Formspree renderer unchanged.
+
+If a theme adapter cannot find its preferred toolbar mount, the current browser
+adapter creates a generic `[data-portal-toolbar]` fallback so language and music
+remain usable.
 
 Admin profile changes are stored in MySQL immediately but do not alter the
 already-generated public HTML. Click **Rebuild Portal** after saving. That

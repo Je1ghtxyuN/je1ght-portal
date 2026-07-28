@@ -395,7 +395,7 @@ rightside_bottom:
 
 # 简繁转换
 translate:
-  # 禁用 — 本网站使用自定义 portal-i18n.js 实现中/英/日多语言切换
+  # 禁用 — 本网站使用主题无关的 portal-locale-core 与 Butterfly 适配器切换界面语言
   enable: false
   default: 繁
   defaultEncoding: 2

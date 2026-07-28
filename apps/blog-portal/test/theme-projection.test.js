@@ -1,6 +1,10 @@
 const test = require('node:test')
 const assert = require('node:assert/strict')
+const fs = require('node:fs')
+const path = require('node:path')
 const { projectThemeConfig } = require('../lib/portal/theme-projection')
+
+const projectRoot = path.resolve(__dirname, '..')
 
 function createInput() {
   return {
@@ -83,4 +87,28 @@ test('does not mutate input configuration', () => {
   projectThemeConfig(input)
 
   assert.deepEqual(input, original)
+})
+
+test('Butterfly projection has an explicit adapter with a compatible export', () => {
+  const legacy = require('../lib/portal/theme-projection')
+  const adapter = require('../lib/portal/adapters/butterfly-theme-projection')
+
+  assert.equal(
+    legacy.projectThemeConfig,
+    adapter.projectButterflyThemeConfig,
+  )
+
+  const rendererFiles = [
+    'lib/portal/create-renderer.js',
+    'lib/portal/render/home.js',
+    'lib/portal/render/about.js',
+    'lib/portal/render/contact.js',
+  ]
+    .map((file) => fs.readFileSync(path.join(projectRoot, file), 'utf8'))
+    .join('\n')
+
+  assert.doesNotMatch(
+    rendererFiles,
+    /butterfly-theme-projection|theme-projection/,
+  )
 })

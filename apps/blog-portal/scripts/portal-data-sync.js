@@ -4,7 +4,9 @@ const {
   localeBasePath,
   supportedLocales,
 } = require('./portal-shared-config')
-const { projectThemeConfig } = require('../lib/portal/theme-projection')
+const {
+  projectButterflyThemeConfig,
+} = require('../lib/portal/adapters/butterfly-theme-projection')
 
 hexo.extend.filter.register('before_generate', () => {
   const data = hexo.locals.get('data') || {}
@@ -40,7 +42,7 @@ hexo.extend.filter.register('before_generate', () => {
     },
   }
 
-  const projected = projectThemeConfig({
+  const projected = projectButterflyThemeConfig({
     themeConfig: hexo.theme.config || {},
     profile,
     navigation,
