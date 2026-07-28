@@ -84,8 +84,8 @@ npm run validate
 echo "[3/5] Preparing portal for deployment..."
 PORTAL_DIR="$REPO_ROOT/apps/blog-portal"
 
-# Save symlink target before we clobber it
-SHARED_ASSETS_REAL="$(cd "$PORTAL_DIR/source/shared-assets" 2>/dev/null && pwd -P || true)"
+# Save the repository-relative symlink target before we clobber it.
+SHARED_ASSETS_LINK="$(readlink "$PORTAL_DIR/source/shared-assets")"
 
 # Copy shared config
 cp "$REPO_ROOT/packages/shared-config/site-identity.json" "$PORTAL_DIR/"
@@ -120,7 +120,7 @@ rsync -avz --delete \
 
 # --- Restore local symlink ---
 rm -rf "$PORTAL_DIR/source/shared-assets"
-ln -s "$SHARED_ASSETS_REAL" "$PORTAL_DIR/source/shared-assets" 2>/dev/null || true
+ln -s "$SHARED_ASSETS_LINK" "$PORTAL_DIR/source/shared-assets"
 rm -f "$PORTAL_DIR/site-identity.json"
 
 # --- Docker rebuild on server ---

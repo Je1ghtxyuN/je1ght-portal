@@ -71,6 +71,11 @@ test('deploy updates the real OpenResty site without stopping the full stack', (
   assert.match(deploy, /--exclude='source\/_data\/site_profile\.yml'/)
   assert.match(deploy, /--exclude='source\/_data\/portfolio\.yml'/)
   assert.doesNotMatch(deploy, /npm install --silent/)
+  assert.match(deploy, /SHARED_ASSETS_LINK="\$\(readlink/)
+  assert.match(
+    deploy,
+    /ln -s "\$SHARED_ASSETS_LINK" "\$PORTAL_DIR\/source\/shared-assets"/,
+  )
 })
 
 test('admin profile editor owns the Formspree endpoint setting', () => {

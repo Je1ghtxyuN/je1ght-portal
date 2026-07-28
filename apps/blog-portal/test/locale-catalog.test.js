@@ -39,3 +39,20 @@ test('portal UI catalogs exclude authored-content namespaces', () => {
   assert.equal(english.projects, undefined)
   assert.equal(english.experience, undefined)
 })
+
+test('portal shared config resolves the dedicated UI catalog path', () => {
+  const sharedConfig = require('../scripts/portal-shared-config')
+
+  assert.equal(
+    sharedConfig.localeBasePath,
+    '/shared-assets/locales/portal-ui',
+  )
+  assert.equal(sharedConfig.getDefaultLocaleText('nav.home'), 'Home')
+})
+
+test('shared assets use a repository-relative symlink', () => {
+  const sharedAssets = path.resolve(__dirname, '../source/shared-assets')
+
+  assert.equal(fs.lstatSync(sharedAssets).isSymbolicLink(), true)
+  assert.equal(fs.readlinkSync(sharedAssets), '../../../packages/shared-assets')
+})

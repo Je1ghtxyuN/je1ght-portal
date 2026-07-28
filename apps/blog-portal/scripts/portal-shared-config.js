@@ -10,10 +10,10 @@ function resolveSiteIdentity() {
 }
 
 function resolveLocaleBundle(locale) {
-  const localPath = path.join(__dirname, '..', 'source', 'shared-assets', 'locales', 'site-ui', `${locale}.json`)
+  const localPath = path.join(__dirname, '..', 'source', 'shared-assets', 'locales', 'portal-ui', `${locale}.json`)
   if (fs.existsSync(localPath)) return require(localPath)
   // Local dev: repo packages directory
-  return require(path.join(__dirname, `../../../packages/shared-assets/locales/site-ui/${locale}.json`))
+  return require(path.join(__dirname, `../../../packages/shared-assets/locales/portal-ui/${locale}.json`))
 }
 
 const siteIdentity = resolveSiteIdentity()
@@ -22,7 +22,8 @@ const defaultLocale = siteIdentity.i18n?.defaultLocale || 'en'
 const supportedLocales = Array.isArray(siteIdentity.i18n?.supportedLocales)
   ? siteIdentity.i18n.supportedLocales
   : []
-const localeBasePath = '/shared-assets/locales/site-ui'
+const localeBasePath =
+  siteIdentity.i18n?.portalLocaleBasePath || '/shared-assets/locales/portal-ui'
 const defaultLocaleBundle = resolveLocaleBundle(defaultLocale)
 
 function getNestedValue(target, keyPath) {

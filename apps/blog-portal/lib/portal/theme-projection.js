@@ -96,8 +96,13 @@ function projectThemeConfig({
   )
   bottom = appendUnique(
     bottom,
-    `<script src="/js/portal-i18n.js?v=${encodeURIComponent(buildVersion)}" defer></script>`,
-    '/js/portal-i18n.js',
+    `<script src="/js/portal-locale-core.js?v=${encodeURIComponent(buildVersion)}" defer></script>`,
+    '/js/portal-locale-core.js',
+  )
+  bottom = appendUnique(
+    bottom,
+    `<script src="/js/adapters/butterfly-adapter.js?v=${encodeURIComponent(buildVersion)}" defer></script>`,
+    '/js/adapters/butterfly-adapter.js',
   )
   projected.inject.head = head
   projected.inject.bottom = bottom
