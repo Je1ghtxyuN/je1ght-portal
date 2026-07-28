@@ -1,7 +1,9 @@
 :where(
   #body-wrap:has(#archive),
   #body-wrap.type-categories,
-  #body-wrap.type-tags
+  #body-wrap.type-tags,
+  #body-wrap.category,
+  #body-wrap.tag
 ) #page-header {
   position: relative;
   height: 260px;
@@ -11,7 +13,9 @@
 :where(
   #body-wrap:has(#archive),
   #body-wrap.type-categories,
-  #body-wrap.type-tags
+  #body-wrap.type-tags,
+  #body-wrap.category,
+  #body-wrap.tag
 ) #page-header::after {
   position: absolute;
   z-index: 1;
@@ -25,7 +29,9 @@
 :where(
   #body-wrap:has(#archive),
   #body-wrap.type-categories,
-  #body-wrap.type-tags
+  #body-wrap.type-tags,
+  #body-wrap.category,
+  #body-wrap.tag
 ) #page-header #page-site-info {
   z-index: 2;
 }
@@ -33,7 +39,9 @@
 :where(
   #body-wrap:has(#archive),
   #body-wrap.type-categories,
-  #body-wrap.type-tags
+  #body-wrap.type-tags,
+  #body-wrap.category,
+  #body-wrap.tag
 ) #site-title {
   color: #fff;
   font-family: var(--portal-heading-font);
@@ -45,7 +53,9 @@
 :where(
   #body-wrap:has(#archive) #archive,
   #body-wrap.type-categories #page,
-  #body-wrap.type-tags #page
+  #body-wrap.type-tags #page,
+  #body-wrap.category #category,
+  #body-wrap.tag #tag
 ) {
   border: 1px solid var(--portal-border);
   border-radius: var(--portal-radius-lg);
@@ -56,7 +66,9 @@
 :where(
   #body-wrap:has(#archive),
   #body-wrap.type-categories,
-  #body-wrap.type-tags
+  #body-wrap.type-tags,
+  #body-wrap.category,
+  #body-wrap.tag
 ) :where(
   .article-sort-title,
   .article-sort-item.year,
@@ -70,8 +82,10 @@
 :where(
   #body-wrap:has(#archive),
   #body-wrap.type-categories,
-  #body-wrap.type-tags
-) :where(.card-widget, #archive, #page) {
+  #body-wrap.type-tags,
+  #body-wrap.category,
+  #body-wrap.tag
+) :where(.card-widget, #archive, #page, #category, #tag) {
   border-color: var(--portal-border);
   background-color: var(--portal-surface);
   color: var(--portal-text);
@@ -81,7 +95,9 @@
   :where(
     #body-wrap:has(#archive),
     #body-wrap.type-categories,
-    #body-wrap.type-tags
+    #body-wrap.type-tags,
+    #body-wrap.category,
+    #body-wrap.tag
   ) #page-header {
     height: 210px;
   }
