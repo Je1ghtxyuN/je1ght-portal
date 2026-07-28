@@ -5,15 +5,18 @@ Last updated: 2026-07-28
 ## Public routing
 
 ```text
-je1ght.top/          -> portal-nginx -> apps/blog-portal/public
-je1ght.top/api/*     -> portal-nginx -> backend-api:3001/*
-je1ght.top/admin/*   -> portal-nginx -> backend-api:3001/admin/*
-je1ght.top/waline/*  -> portal-nginx -> waline
+je1ght.top/          -> 1Panel OpenResty -> apps/blog-portal/public
+je1ght.top/api/*     -> 1Panel OpenResty -> 127.0.0.1:3001/*
+je1ght.top/admin/*   -> 1Panel OpenResty -> 127.0.0.1:3001/admin/*
+je1ght.top/waline/*  -> 1Panel OpenResty -> 127.0.0.1:8360/*
 study.je1ght.top     -> independent Study Room repository
 ```
 
-Cloudflare provides public DNS, TLS, and proxying. nginx is the origin router.
-The Study Room is deliberately outside this repository.
+Cloudflare provides public DNS, TLS, and proxying. The 1Panel-managed OpenResty
+container is the production origin router; its versioned site configuration is
+`infra/nginx/je1ght.top.conf`. The Compose `backend-api` and `waline` services
+publish only loopback ports. The Study Room is deliberately outside this
+repository.
 
 ## Build contract
 
@@ -38,6 +41,7 @@ safe for production data.
 - `apps/blog-portal/lib/portal/theme-projection.js`
 - `apps/blog-portal/scripts/portal-data-sync.js`
 - `infra/nginx/default.conf`
+- `infra/nginx/je1ght.top.conf`
 - `infra/docker-compose.yml`
 
 See `docs/MAINTENANCE.md` and `docs/CONTENT_MAP.md` for ownership rules.

@@ -5,6 +5,8 @@ REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SERVER="je1ght-server"
 SERVER_PORTAL="/home/je1ght/code/websites/je1ght-platform/portal-source"
 SERVER_DOCKER="/home/je1ght/docker/je1ght-platform"
+SERVER_OPENRESTY_CONF="/opt/1panel/apps/openresty/openresty/conf/conf.d/je1ght.top.conf"
+OPENRESTY_CONTAINER="1Panel-openresty-JJeW"
 
 echo "========================================="
 echo " Deploy to je1ght.top"
@@ -18,6 +20,16 @@ echo "[1/5] Syncing posts, drafts, and media..."
 # Ensure directories exist (postimage/ may not exist on first run)
 mkdir -p "$REPO_ROOT/apps/blog-portal/source/postimage"
 ssh "$SERVER" "mkdir -p $SERVER_PORTAL/source/postimage"
+
+# Admin/MySQL owns these snapshots. Refuse to build a stale copy because that
+# would silently replace the visible Admin-managed profile during deployment.
+for snapshot in site_profile.yml portfolio.yml; do
+  if [[ -n "$(rsync -aczni "$SERVER:$SERVER_PORTAL/source/_data/$snapshot" "$REPO_ROOT/apps/blog-portal/source/_data/")" ]]; then
+    echo "Snapshot mismatch: source/_data/$snapshot differs from production." >&2
+    echo "Run scripts/content-snapshot.sh pull, review, commit, and deploy again." >&2
+    exit 1
+  fi
+done
 
 # Phase a: push local new/edited posts, images, and drafts to server.
 # Database-owned _data snapshots are intentionally excluded; use
@@ -87,6 +99,8 @@ rsync -avz --delete \
   --exclude='node_modules' \
   --exclude='.git' \
   --exclude='public' \
+  --exclude='source/_data/site_profile.yml' \
+  --exclude='source/_data/portfolio.yml' \
   "$PORTAL_DIR/" \
   "$SERVER:$SERVER_PORTAL/" 2>&1 | tail -1
 
@@ -113,10 +127,18 @@ echo "[5/5] Installing deps & rebuilding Docker..."
 ssh "$SERVER" "cd $SERVER_PORTAL && npm install --silent 2>&1 | tail -1"
 rsync -avz "$REPO_ROOT/infra/docker-compose.yml" "$SERVER:$SERVER_DOCKER/" 2>&1 | tail -1
 rsync -avz "$REPO_ROOT/infra/nginx/default.conf" "$SERVER:$SERVER_DOCKER/nginx/" 2>&1 | tail -1
+rsync -avz "$REPO_ROOT/infra/nginx/je1ght.top.conf" "$SERVER:$SERVER_OPENRESTY_CONF.next" 2>&1 | tail -1
 
-# Fix root-owned files from Docker, then full restart (not just recreate)
+# Fix root-owned files from Docker, then recreate only the services whose
+# loopback ports and application image are managed by this repository.
 ssh "$SERVER" "docker exec je1ght-backend-api chown -R 1000:1000 /portal-source/public/ 2>/dev/null" || true
-ssh "$SERVER" "cd $SERVER_DOCKER && docker compose build backend-api 2>&1 | tail -3 && docker compose down 2>&1 | tail -1 && docker compose up -d 2>&1 | tail -1"
+ssh "$SERVER" "grep -q '^WALINE_DB_PASSWORD=' $SERVER_DOCKER/.env"
+ssh "$SERVER" "cd $SERVER_DOCKER && docker compose build backend-api 2>&1 | tail -3 && docker compose up -d --no-deps backend-api waline 2>&1 | tail -3"
+ssh "$SERVER" "curl --fail --silent --show-error http://127.0.0.1:3001/health >/dev/null"
+
+# 1Panel OpenResty is the production edge. Install its versioned site config
+# atomically, validate the complete configuration, then reload without downtime.
+ssh "$SERVER" "cp $SERVER_OPENRESTY_CONF $SERVER_OPENRESTY_CONF.codex-backup && mv $SERVER_OPENRESTY_CONF.next $SERVER_OPENRESTY_CONF && if docker exec $OPENRESTY_CONTAINER openresty -t; then docker exec $OPENRESTY_CONTAINER openresty -s reload && rm -f $SERVER_OPENRESTY_CONF.codex-backup; else mv $SERVER_OPENRESTY_CONF.codex-backup $SERVER_OPENRESTY_CONF; exit 1; fi"
 
 # --- Sync admin credentials ---
 

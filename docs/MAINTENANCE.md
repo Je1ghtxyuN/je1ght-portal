@@ -76,11 +76,19 @@ the renderer shows an email fallback and does not invent a submission target.
 
 ## Admin routing
 
-The `/admin/` nginx location must use `^~`. Without it, nginx's later generic
+Production uses the 1Panel OpenResty configuration at
+`infra/nginx/je1ght.top.conf`; `infra/nginx/default.conf` is the standalone
+Compose/nginx reference configuration. The `/admin/` location must use `^~`.
+Without it, nginx's later generic
 `.css` and `.js` regex locations win and look for Admin assets in the portal
 static root. The result is an unstyled page with no login JavaScript even while
 `/auth/login` itself remains healthy. A backend regression test protects this
 precedence rule.
+
+`scripts/deploy.sh` recreates only `backend-api` and `waline`, validates the
+complete OpenResty configuration, and reloads it without stopping the public
+edge. Do not reintroduce a Compose nginx service on port 80 while 1Panel owns
+that port.
 
 ## Optional integrations
 
