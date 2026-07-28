@@ -14,7 +14,7 @@
 | -------- | ------------------------------------------------------------------------------------------------ | ---------------------------------- |
 | 静态站点 | [Hexo 7](https://hexo.io/) + [Butterfly](https://github.com/jerryc127/hexo-theme-butterfly) 主题 | 博客内容、作品集、关于页面         |
 | 后端 API | [Hono](https://hono.dev/) (Node.js)                                                              | 认证、评论、联系表单、站点配置管理 |
-| 数据库   | MySQL + [Prisma](https://www.prisma.io/) ORM                                                     | 管理员账户、会话、评论             |
+| 数据库   | MySQL + [Prisma](https://www.prisma.io/) ORM                                                     | 管理员账户、会话、内容与联系消息   |
 | 反向代理 | Cloudflare CDN                                                                                   | DNS、TLS、缓存                     |
 | 部署     | Docker 自托管 (Ubuntu)                                                                           | 非 Vercel/Netlify，完全自主可控    |
 
@@ -44,3 +44,14 @@ npx prisma migrate dev
 npm run dev          # 监听 3001 端口
 ```
 
+## 验证与维护
+
+门户的一键检查会依次运行单元测试、干净构建和生成结果验证：
+
+```bash
+cd apps/blog-portal
+npm run check
+```
+
+后端使用 `npm test` 和 `npx prisma validate`。内容所有权、快照流程、
+配置覆盖关系、联系表单和发布清单见 [维护指南](docs/MAINTENANCE.md)。

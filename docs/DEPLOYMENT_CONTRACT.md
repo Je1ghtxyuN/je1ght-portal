@@ -1,58 +1,42 @@
 # Deployment Contract
 
-Last updated: 2026-05-16
-Status: active integration and deployment routing contract
+Last updated: 2026-07-28
 
-## Purpose
-
-This document records the portal's deployment contract. The Study Room (study-app) has been separated into its own independent repository and deploys to `study.je1ght.top` — it is no longer part of this contract.
-
-## Product Outputs
-
-### Blog Portal
-
-- source: `apps/blog-portal/`
-- runtime type: static Hexo site
-- build output: `apps/blog-portal/public/`
-- public role: main flagship portal at `/`
-
-### Backend API
-
-- source: `apps/backend-api/`
-- runtime type: Node.js service
-- deployment target: dedicated API host such as `api.yourdomain.com`
-- current status: reserved contract, not yet production-integrated
-
-## Intended Public Routing
-
-Current stable routing contract:
-
-- `/` -> blog portal static output (je1ght.top)
-- `study.je1ght.top` -> independent study-app (separate repo, separate stack)
-
-The Study Room is fully decoupled — the portal no longer hosts or proxies it.
-
-## Reverse Proxy Mapping
-
-Cloudflare and origin behavior:
-
-- Cloudflare handles DNS, TLS, caching, and proxying for `je1ght.top`
-- nginx reverse proxy on Ubuntu serves the portal static output and backend API
-
-Origin mapping:
+## Public routing
 
 ```text
-je1ght.top/            -> blog-portal/public (via portal-nginx)
-je1ght.top/api/*       -> backend-api service
+je1ght.top/          -> portal-nginx -> apps/blog-portal/public
+je1ght.top/api/*     -> portal-nginx -> backend-api:3001/*
+je1ght.top/admin/*   -> portal-nginx -> backend-api:3001/admin/*
+je1ght.top/waline/*  -> portal-nginx -> waline
+study.je1ght.top     -> independent Study Room repository
 ```
 
-## Config Files That Control The Contract
+Cloudflare provides public DNS, TLS, and proxying. nginx is the origin router.
+The Study Room is deliberately outside this repository.
+
+## Build contract
+
+Every portal build uses `npm run build`, which cleans Hexo state and generates
+the custom homepage consistently. `PORTAL_BUILD_VERSION` is injected in memory;
+there is no post-build text replacement or generator renaming.
+
+`npm run validate` rejects unresolved version placeholders, placeholder domains,
+third-party Formspree endpoints, malformed language values, duplicate IDs, and
+broken internal links/assets.
+
+The backend image generates Prisma Client during build. Container startup runs
+`prisma migrate deploy` before starting Hono, so committed migrations must be
+safe for production data.
+
+## Configuration control points
 
 - `packages/shared-config/site-identity.json`
-- `apps/blog-portal/scripts/portal-renderer.js`
+- `apps/blog-portal/_config.yml`
+- `apps/blog-portal/_config.butterfly.yml`
+- `apps/blog-portal/lib/portal/theme-projection.js`
 - `apps/blog-portal/scripts/portal-data-sync.js`
+- `infra/nginx/default.conf`
+- `infra/docker-compose.yml`
 
-## Deployment Assumption Guardrails
-
-- keep shared product wording in `site-identity.json` and shared locale dictionaries instead of duplicating text
-- the study-app is fully independent — do not reintroduce cross-repo sync dependencies
+See `docs/MAINTENANCE.md` and `docs/CONTENT_MAP.md` for ownership rules.

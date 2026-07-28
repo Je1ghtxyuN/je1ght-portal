@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { prisma } from '../db/client.js'
 import { requireAuth } from '../middleware/auth.js'
+import { normalizeSiteProfile } from '../services/content-snapshot.js'
 
 const siteProfile = new Hono()
 
@@ -28,10 +29,11 @@ siteProfile.put('/', requireAuth(), async (c) => {
     return c.json({ error: 'Profile data object is required' }, 400)
   }
 
+  const normalizedData = normalizeSiteProfile(data)
   const profile = await prisma.siteProfile.upsert({
     where: { id: 'default' },
-    update: { data },
-    create: { id: 'default', data },
+    update: { data: normalizedData },
+    create: { id: 'default', data: normalizedData },
   })
 
   return c.json({ profile: profile.data })

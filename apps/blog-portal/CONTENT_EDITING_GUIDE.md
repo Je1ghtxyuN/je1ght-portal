@@ -38,7 +38,7 @@ How posts flow into the UI:
 
 Important note:
 
-- the homepage recent-post count is controlled in `scripts/portal-renderer.js`
+- the homepage recent-post count is controlled in `lib/portal/render/data.js`
 - edit `PORTAL_CONFIG.HOMEPAGE_POST_LIMIT` to change how many posts appear on the homepage
 
 ## 2. Where Profile And Identity Content Lives
@@ -116,7 +116,7 @@ Main portal page shells live here:
 Important note:
 
 - the homepage is generated at the root route by `scripts/portal-home-generator.js`
-- the branded rendering logic lives in `scripts/portal-renderer.js`
+- the branded rendering logic lives in `lib/portal/render/`
 - the about, portfolio, and Study Room page shells stay intentionally lightweight
 - the current tag entry points are `{% portal_about %}`, `{% portal_portfolio %}`, and `{% portal_study_room %}`
 

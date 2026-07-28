@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import yaml from 'js-yaml'
 import {
+  normalizeSiteProfile,
   serializePortfolio,
   serializeSiteProfile,
 } from '../src/services/content-snapshot.js'
@@ -34,14 +35,18 @@ test('site profile snapshot round-trips nested and special values', () => {
 })
 
 test('site profile snapshot drops deprecated third-party form endpoints', () => {
-  const serialized = serializeSiteProfile({
+  const profile = {
     contact: {
       email: 'person@example.com',
       formspree_endpoint: 'https://formspree.io/f/example',
     },
-  })
+  }
+  const serialized = serializeSiteProfile(profile)
 
   assert.deepEqual(yaml.load(serialized), {
+    contact: { email: 'person@example.com' },
+  })
+  assert.deepEqual(normalizeSiteProfile(profile), {
     contact: { email: 'person@example.com' },
   })
 })
