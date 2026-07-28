@@ -50,7 +50,7 @@ services:
     env_file:
       - .env                        # 从 .env 文件加载环境变量
     volumes:
-      - /home/je1ght/websites/je1ght-platform/portal-source:/portal-source:rw
+      - /home/je1ght/code/websites/je1ght-platform/portal-source:/portal-source:rw
     networks:
       - database_default            # 和 MySQL 共享的内部网络
       - internet                    # 和 nginx 通信的 bridge
@@ -63,7 +63,7 @@ services:
       - "80:80"                     # 宿主机 80 → 容器 80
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro  # 配置只读
-      - /home/je1ght/websites/je1ght-platform/portal-source/public:/usr/share/nginx/html:ro
+      - /home/je1ght/code/websites/je1ght-platform/portal-source/public:/usr/share/nginx/html:ro
     networks:
       - database_default
       - internet
@@ -208,7 +208,7 @@ CMD ["node", "src/index.js"]
 
 ```yaml
 volumes:
-  - /home/je1ght/websites/je1ght-platform/portal-source:/portal-source:rw
+  - /home/je1ght/code/websites/je1ght-platform/portal-source:/portal-source:rw
 ```
 
 服务器上的 `portal-source` 目录被挂载到容器内的 `/portal-source`。backend-api 的 rebuild 服务通过 `env.REPO_ROOT` 找到这个路径：

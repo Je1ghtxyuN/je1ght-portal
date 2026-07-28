@@ -5,6 +5,8 @@ const {
   siteIdentity,
   supportedLocales,
 } = require('./portal-shared-config')
+const fs = require('fs')
+const path = require('path')
 
 hexo.extend.filter.register('before_generate', () => {
   const data = hexo.locals.get('data') || {}
@@ -46,6 +48,41 @@ hexo.extend.filter.register('before_generate', () => {
     return filteredEntries
   }
 
+  const getCacheBreakingFaviconPath = (iconPath) => (
+    iconPath ? iconPath.replace(/icon\.png(?:\?.*)?$/, 'site-favicon.png') : iconPath
+  )
+
+  const faviconRuntimeRefreshScript = [
+    '<script>',
+    '(function(){',
+    "var iconPath='/shared-assets/images/safari-tab-icon.png';",
+    'var refreshCount=0;',
+    'function buildHref(){return iconPath+"?runtime="+Date.now()+"-"+Math.random().toString(36).slice(2);}',
+    'function removeIcons(){document.querySelectorAll("link[rel*=icon]").forEach(function(link){link.parentNode&&link.parentNode.removeChild(link);});}',
+    'function addIcon(rel,sizes,href){var link=document.createElement("link");link.rel=rel;link.type="image/png";if(sizes)link.sizes=sizes;link.href=href;document.head.appendChild(link);}',
+    'function nudgeTitle(){var title=document.title;if(!title)return;document.title=title+"\\u200b";window.setTimeout(function(){if(document.title===title+"\\u200b")document.title=title;},80);}',
+    'function refreshFavicon(){if(!document.head)return;var href=buildHref();removeIcons();addIcon("icon","192x192",href);addIcon("icon","64x64",href);addIcon("shortcut icon","32x32",href);addIcon("apple-touch-icon","180x180",href);nudgeTitle();}',
+    'function scheduleRefresh(){window.setTimeout(refreshFavicon,0);window.setTimeout(refreshFavicon,250);window.setTimeout(refreshFavicon,1000);}',
+    'var pushState=history.pushState;history.pushState=function(){var result=pushState.apply(this,arguments);scheduleRefresh();return result;};',
+    'var replaceState=history.replaceState;history.replaceState=function(){var result=replaceState.apply(this,arguments);scheduleRefresh();return result;};',
+    '["DOMContentLoaded","pageshow","popstate","hashchange","pjax:send","pjax:complete","pjax:success","pjax:end"].forEach(function(eventName){window.addEventListener(eventName,scheduleRefresh,true);document.addEventListener(eventName,scheduleRefresh,true);});',
+    'scheduleRefresh();',
+    'var timer=window.setInterval(function(){refreshCount+=1;refreshFavicon();if(refreshCount>=8)window.clearInterval(timer);},1500);',
+    '})();',
+    '</script>',
+  ].join('')
+
+  const syncCacheBreakingFavicon = (iconPath, faviconPath) => {
+    if (!iconPath || !faviconPath || iconPath === faviconPath) return
+    const iconSourcePath = path.join(hexo.source_dir, iconPath.replace(/^\//, ''))
+    const faviconSourcePath = path.join(hexo.source_dir, faviconPath.replace(/^\//, ''))
+    if (!fs.existsSync(iconSourcePath)) return
+    fs.mkdirSync(path.dirname(faviconSourcePath), { recursive: true })
+    fs.copyFileSync(iconSourcePath, faviconSourcePath)
+    fs.copyFileSync(iconSourcePath, path.join(hexo.source_dir, 'logo.png'))
+    fs.copyFileSync(iconSourcePath, path.join(hexo.source_dir, 'shared-assets/images/safari-tab-icon.png'))
+  }
+
   if (profile.owner && profile.owner.display_name) {
     hexo.config.author = profile.owner.display_name
   }
@@ -64,7 +101,9 @@ hexo.extend.filter.register('before_generate', () => {
   themeConfig.search.local_search = themeConfig.search.local_search || {}
 
   if (profile.icon_path) {
-    themeConfig.favicon = profile.icon_path
+    const faviconPath = getCacheBreakingFaviconPath(profile.icon_path)
+    syncCacheBreakingFavicon(profile.icon_path, faviconPath)
+    themeConfig.favicon = faviconPath
     themeConfig.nav.logo = profile.icon_path
   }
 
@@ -125,6 +164,18 @@ hexo.extend.filter.register('before_generate', () => {
   const bottomInject = Array.isArray(themeConfig.inject.bottom)
     ? themeConfig.inject.bottom.slice()
     : []
+
+  if (profile.icon_path) {
+    const faviconPath = getCacheBreakingFaviconPath(profile.icon_path)
+    headInject.unshift(
+      faviconRuntimeRefreshScript,
+      '<link rel="icon" type="image/png" sizes="192x192" href="/shared-assets/images/safari-tab-icon.png">',
+      '<link rel="icon" type="image/png" sizes="64x64" href="/shared-assets/images/safari-tab-icon.png">',
+      `<link rel="apple-touch-icon" sizes="180x180" href="${faviconPath}">`,
+      `<link rel="icon" type="image/png" sizes="32x32" href="${faviconPath}">`,
+      `<link rel="icon" type="image/png" sizes="16x16" href="${faviconPath}">`,
+    )
+  }
 
   // portal-custom.css is injected via _config.butterfly.yml inject.head with BUILD_VER
   themeConfig.inject.head = headInject

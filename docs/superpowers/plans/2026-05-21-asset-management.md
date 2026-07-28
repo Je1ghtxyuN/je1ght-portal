@@ -551,7 +551,7 @@ In `apps/backend-api/src/services/rebuild.js`, replace the site_profile.yml gene
 
 ```bash
 # SSH into server after deploying, check generated site_profile.yml
-ssh je1ght-server "cat /home/je1ght/websites/je1ght-platform/portal-source/source/_data/site_profile.yml | grep -A5 hero_backgrounds"
+ssh je1ght-server "cat /home/je1ght/code/websites/je1ght-platform/portal-source/source/_data/site_profile.yml | grep -A5 hero_backgrounds"
 ```
 
 - [ ] **Step 3: Commit**
@@ -583,7 +583,7 @@ rsync -avz \
 
 ```bash
 # Dry-run check: does the shared-assets directory exist on the server?
-ssh je1ght-server "ls /home/je1ght/websites/je1ght-platform/portal-source/source/shared-assets/images/"
+ssh je1ght-server "ls /home/je1ght/code/websites/je1ght-platform/portal-source/source/shared-assets/images/"
 ```
 
 - [ ] **Step 3: Commit**

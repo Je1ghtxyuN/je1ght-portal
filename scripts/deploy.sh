@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SERVER="je1ght-server"
-SERVER_PORTAL="/home/je1ght/websites/je1ght-platform/portal-source"
+SERVER_PORTAL="/home/je1ght/code/websites/je1ght-platform/portal-source"
 SERVER_DOCKER="/home/je1ght/docker/je1ght-platform"
 
 echo "========================================="

@@ -66,7 +66,7 @@ social:
 # --------------------------------------
 
 # 🔧 网站图标（favicon）— Admin Site Profile → Icon 管理
-favicon: /shared-assets/images/icon.png
+favicon: /shared-assets/images/site-favicon.png
 
 # 🔧 头像 — Admin Site Profile → Avatar 管理
 avatar:
@@ -490,10 +490,10 @@ busuanzi:
 
 math:
   # 公式引擎: mathjax / katex（留空 = 禁用）
-  use:
+  use: mathjax
   # true = 每页都加载公式引擎
   # false = 只在 frontmatter 中声明了 mathjax: true 或 katex: true 的页面加载
-  per_page: true
+  per_page: false
   hide_scrollbar: false
 
   mathjax:
