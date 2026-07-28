@@ -64,7 +64,11 @@ textarea {
   color: var(--portal-footer-text);
 }
 
-#footer :where(a, .footer_custom_text, #site-running-time) {
+#footer a {
+  color: inherit;
+}
+
+#footer :where(.footer_custom_text, #site-running-time) {
   color: inherit;
 }
 

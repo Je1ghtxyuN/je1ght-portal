@@ -58,5 +58,6 @@ test('footer follows Portal light and dark theme tokens', () => {
   assert.match(base, /#footer[\s\S]*background:\s*var\(--portal-footer-bg\)/)
   assert.match(base, /#footer[\s\S]*color:\s*var\(--portal-footer-text\)/)
   assert.match(base, /border-top:\s*1px solid var\(--portal-footer-border\)/)
+  assert.match(base, /#footer a\s*\{[^}]*color:\s*inherit/)
   assert.doesNotMatch(base, /#footer\s*\{[^}]*background:\s*#[0-9a-f]{3,8}/i)
 })
