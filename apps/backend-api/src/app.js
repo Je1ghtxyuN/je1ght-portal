@@ -12,6 +12,7 @@ import { portfolio } from './routes/portfolio.js'
 import { siteProfile } from './routes/site-profile.js'
 import { rebuild } from './routes/rebuild.js'
 import { assets } from './routes/assets.js'
+import { contact } from './routes/contact.js'
 
 export function createApp() {
   const app = new Hono()
@@ -39,6 +40,7 @@ export function createApp() {
   app.route('/site-profile', siteProfile)
   app.route('/admin/rebuild', rebuild)
   app.route('/assets', assets)
+  app.route('/contact', contact)
 
   app.notFound((c) => c.json({ error: 'Not found' }, 404))
 

@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "hexo server",
-    "build": "hexo generate",
+    "build": "hexo clean && hexo generate",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
     "test": "node --test test/*.test.js",

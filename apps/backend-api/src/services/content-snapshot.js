@@ -12,7 +12,9 @@ function serializeSnapshot(data) {
 }
 
 export function serializeSiteProfile(profile) {
-  return serializeSnapshot(profile)
+  const snapshot = structuredClone(profile || {})
+  if (snapshot.contact) delete snapshot.contact.formspree_endpoint
+  return serializeSnapshot(snapshot)
 }
 
 export function serializePortfolio(items) {
