@@ -2,10 +2,30 @@ const assert = require('node:assert/strict')
 const fs = require('node:fs')
 const path = require('node:path')
 const test = require('node:test')
+const { parse } = require('parse5')
 
 const root = path.resolve(__dirname, '..', '..')
 const publicRoot = path.join(root, 'public')
 const buildVersion = process.env.PORTAL_BUILD_VERSION
+
+const findElementById = (node, id) => {
+  const hasId = node.attrs?.some(
+    (attribute) => attribute.name === 'id' && attribute.value === id,
+  )
+  if (hasId) return node
+
+  for (const child of node.childNodes || []) {
+    const match = findElementById(child, id)
+    if (match) return match
+  }
+
+  return null
+}
+
+const hasTaxonomyDetailStructure = (html, hook) => {
+  const bodyWrap = findElementById(parse(html), 'body-wrap')
+  return Boolean(bodyWrap && findElementById(bodyWrap, hook))
+}
 
 const detailPage = (family) => {
   const familyRoot = path.join(publicRoot, family)
@@ -19,6 +39,18 @@ const detailPage = (family) => {
   assert.ok(detail, `expected a generated ${family} detail page`)
   return path.join(familyRoot, detail)
 }
+
+test('taxonomy detail hooks must be descendants of body-wrap', () => {
+  for (const hook of ['category', 'tag']) {
+    const nested =
+      `<div class="page" id="body-wrap"><main><div id="${hook}"></div></main></div>`
+    const sibling =
+      `<div class="page" id="body-wrap"></div><main><div id="${hook}"></div></main>`
+
+    assert.equal(hasTaxonomyDetailStructure(nested, hook), true)
+    assert.equal(hasTaxonomyDetailStructure(sibling, hook), false)
+  }
+})
 
 test('fresh generated archive and taxonomy pages expose visual hooks and the current adapter stylesheet', () => {
   assert.match(
@@ -57,8 +89,11 @@ test('fresh generated taxonomy detail hooks are covered by adapter scopes', () =
     ['tags', 'tag'],
   ]) {
     const html = fs.readFileSync(detailPage(family), 'utf8')
-    assert.match(html, /<div class="page" id="body-wrap">/)
-    assert.match(html, new RegExp(`<div id="${hook}">`))
+    assert.equal(
+      hasTaxonomyDetailStructure(html, hook),
+      true,
+      `expected #${hook} to be a descendant of #body-wrap`,
+    )
     assert.match(css, new RegExp(`#body-wrap:has\\(#${hook}\\)`))
   }
 })
