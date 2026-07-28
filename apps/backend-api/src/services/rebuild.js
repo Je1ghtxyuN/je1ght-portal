@@ -4,6 +4,10 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { prisma } from '../db/client.js'
 import { env } from '../config/env.js'
+import {
+  serializePortfolio,
+  serializeSiteProfile,
+} from './content-snapshot.js'
 
 const execFileAsync = promisify(execFile)
 
@@ -34,60 +38,6 @@ function yamlEscape(value) {
     return `"${str.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`
   }
   return str
-}
-
-function yamlArrayInline(arr) {
-  if (!Array.isArray(arr) || arr.length === 0) return '[]'
-  return `[${arr.map((v) => yamlEscape(v)).join(', ')}]`
-}
-
-function toYaml(obj, indent = 0) {
-  const prefix = '  '.repeat(indent)
-  const lines = []
-
-  for (const [key, value] of Object.entries(obj)) {
-    if (value === null || value === undefined) {
-      lines.push(`${prefix}${key}:`)
-    } else if (Array.isArray(value)) {
-      if (value.length === 0) {
-        lines.push(`${prefix}${key}: []`)
-      } else if (value.every((v) => typeof v === 'string' || typeof v === 'number')) {
-        lines.push(`${prefix}${key}: ${yamlArrayInline(value)}`)
-      } else {
-        lines.push(`${prefix}${key}:`)
-        for (const item of value) {
-          if (typeof item === 'object' && item !== null) {
-            const entries = Object.entries(item)
-            if (entries.length > 0) {
-              const [firstKey, firstVal] = entries[0]
-              lines.push(`${prefix}  - ${firstKey}: ${typeof firstVal === 'object' ? '' : yamlEscape(firstVal)}`)
-              for (const [k, v] of entries.slice(1)) {
-                if (typeof v === 'object' && v !== null && !Array.isArray(v)) {
-                  lines.push(`${prefix}    ${k}:`)
-                  for (const [sk, sv] of Object.entries(v)) {
-                    lines.push(`${prefix}      ${sk}: ${yamlEscape(sv)}`)
-                  }
-                } else if (Array.isArray(v)) {
-                  lines.push(`${prefix}    ${k}: ${yamlArrayInline(v)}`)
-                } else {
-                  lines.push(`${prefix}    ${k}: ${yamlEscape(v)}`)
-                }
-              }
-            }
-          } else {
-            lines.push(`${prefix}  - ${yamlEscape(item)}`)
-          }
-        }
-      }
-    } else if (typeof value === 'object') {
-      lines.push(`${prefix}${key}:`)
-      lines.push(toYaml(value, indent + 1))
-    } else {
-      lines.push(`${prefix}${key}: ${yamlEscape(value)}`)
-    }
-  }
-
-  return lines.join('\n')
 }
 
 function postToFrontmatter(post) {
@@ -179,7 +129,7 @@ export async function rebuildPortal() {
       data.hero_rotation_interval = 300
     }
 
-    const yamlContent = MANAGED_MARKER_YML + '\n' + toYaml(data)
+    const yamlContent = serializeSiteProfile(data)
     await writeFile(join(dataDir, 'site_profile.yml'), yamlContent, 'utf-8')
   }
 
@@ -188,32 +138,8 @@ export async function rebuildPortal() {
     orderBy: { sortOrder: 'asc' },
   })
 
-  if (portfolioItems.length > 0) {
-    const portfolioData = {
-      section: {
-        title: 'Portfolio',
-        intro: '',
-        home_preview_title: 'Selected Projects',
-        home_preview_intro: '',
-        page_link_label: 'View Project',
-      },
-      cards: portfolioItems.map((item) => ({
-        slug: item.slug,
-        title: item.title,
-        year: item.year || '',
-        status: item.status || '',
-        summary: item.summary,
-        cover_image: item.coverImage || '/shared-assets/images/background.jpg',
-        gallery: Array.isArray(item.gallery) ? item.gallery : [],
-        tech_stack: Array.isArray(item.techStack) ? item.techStack : [],
-        tags: Array.isArray(item.tags) ? item.tags : [],
-        links: typeof item.links === 'object' ? item.links : {},
-      })),
-    }
-
-    const yamlContent = MANAGED_MARKER_YML + '\n' + toYaml(portfolioData)
-    await writeFile(join(dataDir, 'portfolio.yml'), yamlContent, 'utf-8')
-  }
+  const portfolioYaml = serializePortfolio(portfolioItems)
+  await writeFile(join(dataDir, 'portfolio.yml'), portfolioYaml, 'utf-8')
 
   // 4. Run hexo generate
   const portalRoot = getPortalRoot()

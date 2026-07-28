@@ -2,9 +2,26 @@
 
 This document explains where the blog portal content is stored, where it is used, and how it flows into the branded homepage.
 
+## Ownership Summary
+
+| Content | Canonical owner | Repository representation |
+| --- | --- | --- |
+| Site profile | MySQL `SiteProfile` | generated `source/_data/site_profile.yml` snapshot |
+| Portfolio | MySQL `PortfolioItem` | generated `source/_data/portfolio.yml` snapshot |
+| Admin posts | MySQL `BlogPost` | marked Markdown snapshot |
+| Manual posts and drafts | repository Markdown | imported into MySQL during deployment |
+| Navigation and shortcuts | `source/_data/navigation.yml` | read directly at build time |
+| Friend links | `source/_data/link.yml` | read directly at build time |
+| Brand and media assets | `packages/shared-assets/` | exposed through `source/shared-assets` |
+
+Normal deployment does not synchronize database-owned `_data` files in both
+directions. Use `scripts/content-snapshot.sh pull` to review the current server
+snapshot. Use `scripts/content-snapshot.sh import-profile` only when a reviewed
+local profile snapshot should intentionally replace the MySQL profile.
+
 ## Site Profile Data
 
-Source of truth:
+Versioned build snapshot:
 
 - `apps/blog-portal/source/_data/site_profile.yml`
 
@@ -32,7 +49,11 @@ UI surfaces fed by this file:
 
 ## Portfolio Data
 
-Source of truth:
+Canonical owner:
+
+- MySQL `PortfolioItem`, edited through the Admin UI
+
+Versioned build snapshot:
 
 - `apps/blog-portal/source/_data/portfolio.yml`
 
@@ -95,7 +116,6 @@ Main responsibilities:
 UI surfaces fed by posts:
 
 - homepage recent-post section
-- `/blog/`
 - `/archives/`
 - `/categories/`
 - `/tags/`

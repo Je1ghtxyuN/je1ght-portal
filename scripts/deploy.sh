@@ -13,22 +13,21 @@ echo "========================================="
 # --- Local build ---
 
 echo ""
-echo "[1/5] Bidirectional content sync..."
+echo "[1/5] Syncing posts, drafts, and media..."
 
 # Ensure directories exist (postimage/ may not exist on first run)
 mkdir -p "$REPO_ROOT/apps/blog-portal/source/postimage"
 ssh "$SERVER" "mkdir -p $SERVER_PORTAL/source/postimage"
 
-# Phase a: push local new/edited posts, images, data files, and drafts to server
+# Phase a: push local new/edited posts, images, and drafts to server.
+# Database-owned _data snapshots are intentionally excluded; use
+# scripts/content-snapshot.sh for an explicit snapshot operation.
 rsync -avz \
   "$REPO_ROOT/apps/blog-portal/source/_posts/" \
   "$SERVER:$SERVER_PORTAL/source/_posts/" 2>&1 | tail -1
 rsync -avz \
   "$REPO_ROOT/apps/blog-portal/source/postimage/" \
   "$SERVER:$SERVER_PORTAL/source/postimage/" 2>&1 | tail -1
-rsync -avz \
-  "$REPO_ROOT/apps/blog-portal/source/_data/" \
-  "$SERVER:$SERVER_PORTAL/source/_data/" 2>&1 | tail -1
 # Sync drafts with --delete so published drafts (moved to _posts) are cleaned up server-side
 mkdir -p "$REPO_ROOT/apps/blog-portal/source/_drafts"
 ssh "$SERVER" "mkdir -p $SERVER_PORTAL/source/_drafts"
@@ -45,9 +44,6 @@ rsync -avz \
 rsync -avz \
   "$SERVER:$SERVER_PORTAL/source/postimage/" \
   "$REPO_ROOT/apps/blog-portal/source/postimage/" 2>&1 | tail -1
-rsync -avz \
-  "$SERVER:$SERVER_PORTAL/source/_data/" \
-  "$REPO_ROOT/apps/blog-portal/source/_data/" 2>&1 | tail -1
 
 # Pull back server-side _drafts
 rsync -avz \
@@ -128,9 +124,6 @@ ssh "$SERVER" "cd $SERVER_DOCKER && docker compose build backend-api 2>&1 | tail
 # --- Sync admin credentials ---
 
 "$REPO_ROOT/scripts/sync-admin.sh" 2>/dev/null || true
-
-# --- Sync local site_profile.yml to MySQL ---
-ssh "$SERVER" "docker exec je1ght-backend-api node scripts/import-local-profile.js 2>&1" || true
 
 echo ""
 echo "========================================="
