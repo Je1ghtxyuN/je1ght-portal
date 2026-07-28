@@ -62,12 +62,10 @@ echo "[2/5] Building Portal..."
 cd "$REPO_ROOT/apps/blog-portal"
 # Clear Hexo cache so stale db.json doesn't poison the build with old data
 rm -f db.json
-./node_modules/.bin/hexo generate 2>&1 | tail -1
-
-# Bust Cloudflare cache by replacing BUILD_VER placeholder with Unix timestamp
-BUILD_VER=$(date +%s)
+BUILD_VER="$(git -C "$REPO_ROOT" rev-parse --short HEAD)"
 echo "       Cache-bust version: $BUILD_VER"
-find "$REPO_ROOT/apps/blog-portal/public" -name '*.html' -exec sed -i '' "s/BUILD_VER/$BUILD_VER/g" {} +
+PORTAL_BUILD_VERSION="$BUILD_VER" npm run build 2>&1 | tail -1
+npm run validate
 
 # --- Prepare self-contained portal for server ---
 # Server has no packages/ directory, so copy deps into portal before syncing.

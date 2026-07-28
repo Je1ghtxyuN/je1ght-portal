@@ -224,46 +224,21 @@ export async function rebuildPortal() {
     await import('node:fs/promises').then((fs) => fs.unlink(dbPath))
   } catch { /* db.json may not exist */ }
 
-  // Temporarily disable conflicting generator (uses source/index.md + tag instead)
-  const genPath = join(portalRoot, 'scripts', 'portal-home-generator.js')
-  const genBak = genPath + '.disabled'
-  let restored = false
-  try {
-    await import('node:fs/promises').then((fs) => fs.rename(genPath, genBak))
-    restored = true
-  } catch { /* generator may already be disabled */ }
-
+  const buildVer = String(Math.floor(Date.now() / 1000))
   try {
     const hexoBin = join(portalRoot, 'node_modules', '.bin', 'hexo')
     // Note: do NOT use `hexo clean` — it deletes public/ which breaks the Docker bind mount
     const { stdout, stderr } = await execFileAsync(hexoBin, ['generate'], {
       cwd: portalRoot,
       timeout: 60000,
+      env: { ...process.env, PORTAL_BUILD_VERSION: buildVer },
     })
     // Fix ownership so nginx can read (runs as root in Docker, nginx needs read)
     await execFileAsync('chown', ['-R', '1000:1000', join(portalRoot, 'public')], { timeout: 10000 }).catch(() => {})
-    // Bust Cloudflare cache: replace BUILD_VER placeholder with Unix timestamp
-    const buildVer = String(Math.floor(Date.now() / 1000))
-    await execFileAsync('find', [join(portalRoot, 'public'), '-name', '*.html', '-exec', 'sed', '-i', `s/BUILD_VER/${buildVer}/g`, '{}', '+'], { timeout: 10000 }).catch(() => {})
-    // Also replace any stale cached version (in case hexo cached a previous buildVer)
-    await execFileAsync('find', [join(portalRoot, 'public'), '-name', '*.html', '-exec', 'sed', '-i', `s/v=\\\\d\\\\+/v=${buildVer}/g`, '{}', '+'], { timeout: 10000 }).catch(() => {})
     // Touch nginx HTML dir to refresh bind mount without downtime
     await execFileAsync('touch', [join(portalRoot, 'public', '.nginx-refresh')], { timeout: 5000 }).catch(() => {})
     return { ok: true, postsGenerated: posts.length, hexoOutput: stdout, hexoErrors: stderr || null, cacheVersion: buildVer }
   } catch (err) {
-    try {
-      await execFileAsync('npx', ['hexo', 'generate'], { cwd: portalRoot, timeout: 60000 })
-      // Cache bust in fallback path too
-      const fbVer = String(Math.floor(Date.now() / 1000))
-      await execFileAsync('find', [join(portalRoot, 'public'), '-name', '*.html', '-exec', 'sed', '-i', `s/BUILD_VER/${fbVer}/g`, '{}', '+'], { timeout: 10000 }).catch(() => {})
-      return { ok: true, postsGenerated: posts.length }
-    } catch (err2) {
-      return { ok: false, postsGenerated: posts.length, error: err.message, hexoOutput: err.stdout || '', hexoErrors: err.stderr || '' }
-    }
-  } finally {
-    // Restore the generator if we renamed it
-    if (restored) {
-      try { await import('node:fs/promises').then((fs) => fs.rename(genBak, genPath)) } catch {}
-    }
+    return { ok: false, postsGenerated: posts.length, error: err.message, hexoOutput: err.stdout || '', hexoErrors: err.stderr || '' }
   }
 }

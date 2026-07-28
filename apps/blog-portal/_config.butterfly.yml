@@ -14,7 +14,7 @@
 
 nav:
   # 🔧 导航栏 logo 图片路径 — Admin Assets → Icon 管理
-  logo: /shared-assets/images/icon.png
+  logo:
   # 是否在导航栏显示网站标题
   display_title: true
   # 是否在文章页导航栏显示文章标题
@@ -24,13 +24,6 @@ nav:
 
 # 🔧 导航菜单 — Admin UI → Site Profile → Navigation 管理（portal-data-sync.js 覆盖）
 menu:
-  Home: / || fas fa-house
-  Archives: /archives/ || fas fa-box-archive
-  Categories: /categories/ || fas fa-folder-open
-  Portfolio: /portfolio/ || fas fa-laptop-code
-  Contact: /contact/ || fas fa-envelope
-  Friends: /link/ || fas fa-user-group
-  About: /about/ || fas fa-id-card
 
 # --------------------------------------
 # 代码块设置
@@ -59,18 +52,17 @@ code_blocks:
 # 🔧 社交链接 — Admin UI → Site Profile → Social Links 管理（portal-data-sync.js 覆盖）
 # 格式: 图标类名: 链接 || 标签 || 颜色
 social:
-  fab fa-github: https://github.com/Je1ghtxyuN || GitHub || '#24292e'
 
 # --------------------------------------
 # 图片与品牌资源
 # --------------------------------------
 
 # 🔧 网站图标（favicon）— Admin Site Profile → Icon 管理
-favicon: /shared-assets/images/site-favicon.png
+favicon:
 
 # 🔧 头像 — Admin Site Profile → Avatar 管理
 avatar:
-  img: /shared-assets/images/profile.jpg
+  img:
   # 头像旋转动效
   effect: true
 
@@ -78,23 +70,23 @@ avatar:
 disable_top_img: false
 
 # 🔧 页面默认顶部图片 — Admin Site Profile → Backgrounds 管理（portal-data-sync.js 覆盖）
-default_top_img: /shared-assets/images/background.jpg
+default_top_img:
 
 # 🔧 首页顶部图片（portal-data-sync.js 覆盖）
-index_img: /shared-assets/images/background.jpg
+index_img:
 
 # 🔧 归档页顶部图片（portal-data-sync.js 覆盖）
-archive_img: /shared-assets/images/background.jpg
+archive_img:
 
 # 🔧 标签页顶部图片（portal-data-sync.js 覆盖）
-tag_img: /shared-assets/images/background.jpg
+tag_img:
 
 # 按标签设置不同顶部图片
 # 格式: - 标签名: 图片路径
 tag_per_img:
 
 # 🔧 分类页顶部图片（portal-data-sync.js 覆盖）
-category_img: /shared-assets/images/background.jpg
+category_img:
 
 # 按分类设置不同顶部图片
 category_per_img:
@@ -186,9 +178,6 @@ subtitle:
   source: false
   # 🔧 副标题内容，会被 portal-data-sync.js 覆盖为 Admin UI 中设置的值
   sub:
-    - Code, Anime, Games, and Coffee.
-    - VR, HCI, and game dev.
-    - Writing things down so I don't forget.
 
 # 首页文章布局
 # 1: 封面左，文字右
@@ -292,14 +281,14 @@ footer:
   owner:
     enable: true
     # 🔧 起始年份 — Admin UI → Site Profile 管理（portal-data-sync.js 覆盖）
-    since: 2025
+    since:
   # 主题和框架的版权信息
   copyright:
     enable: true
     # 显示 Hexo + Butterfly 版本号
     version: true
   # 🔧 自定义页脚文字 — Admin UI → Site Profile → Footer 管理（portal-data-sync.js 覆盖）
-  custom_text: <span id="site-running-time" data-site-started="2025-06-25"></span>
+  custom_text:
 
 # --------------------------------------
 # 侧边栏

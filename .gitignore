@@ -47,3 +47,15 @@ screenshots/
 
 # Local Git worktrees
 .worktrees/
+
+# Local visual QA artifacts
+/current-music-panel.png
+/homepage-snapshot.md
+/je1ght-top-with-player.png
+/music-panel-open.png
+/music-player-dark.png
+/music-player-fixed.png
+/music-player-light.png
+
+# Generated favicon compatibility copy
+/apps/blog-portal/source/logo.png
