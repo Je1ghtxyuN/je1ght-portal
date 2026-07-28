@@ -6,6 +6,8 @@ SERVER="je1ght-server"
 SERVER_PORTAL="/home/je1ght/code/websites/je1ght-platform/portal-source"
 SERVER_DOCKER="/home/je1ght/docker/je1ght-platform"
 SERVER_OPENRESTY_CONF="/opt/1panel/apps/openresty/openresty/conf/conf.d/je1ght.top.conf"
+SERVER_OPENRESTY_STAGING="$SERVER_DOCKER/je1ght.top.conf.next"
+SERVER_OPENRESTY_BACKUP="$SERVER_DOCKER/je1ght.top.conf.codex-backup"
 OPENRESTY_CONTAINER="1Panel-openresty-JJeW"
 
 echo "========================================="
@@ -124,10 +126,9 @@ rm -f "$PORTAL_DIR/site-identity.json"
 # --- Docker rebuild on server ---
 
 echo "[5/5] Installing deps & rebuilding Docker..."
-ssh "$SERVER" "cd $SERVER_PORTAL && npm install --silent 2>&1 | tail -1"
 rsync -avz "$REPO_ROOT/infra/docker-compose.yml" "$SERVER:$SERVER_DOCKER/" 2>&1 | tail -1
 rsync -avz "$REPO_ROOT/infra/nginx/default.conf" "$SERVER:$SERVER_DOCKER/nginx/" 2>&1 | tail -1
-rsync -avz "$REPO_ROOT/infra/nginx/je1ght.top.conf" "$SERVER:$SERVER_OPENRESTY_CONF.next" 2>&1 | tail -1
+rsync -avz "$REPO_ROOT/infra/nginx/je1ght.top.conf" "$SERVER:$SERVER_OPENRESTY_STAGING" 2>&1 | tail -1
 
 # Fix root-owned files from Docker, then recreate only the services whose
 # loopback ports and application image are managed by this repository.
@@ -138,7 +139,7 @@ ssh "$SERVER" "curl --fail --silent --show-error http://127.0.0.1:3001/health >/
 
 # 1Panel OpenResty is the production edge. Install its versioned site config
 # atomically, validate the complete configuration, then reload without downtime.
-ssh "$SERVER" "cp $SERVER_OPENRESTY_CONF $SERVER_OPENRESTY_CONF.codex-backup && mv $SERVER_OPENRESTY_CONF.next $SERVER_OPENRESTY_CONF && if docker exec $OPENRESTY_CONTAINER openresty -t; then docker exec $OPENRESTY_CONTAINER openresty -s reload && rm -f $SERVER_OPENRESTY_CONF.codex-backup; else mv $SERVER_OPENRESTY_CONF.codex-backup $SERVER_OPENRESTY_CONF; exit 1; fi"
+ssh "$SERVER" "cp $SERVER_OPENRESTY_CONF $SERVER_OPENRESTY_BACKUP && cp $SERVER_OPENRESTY_STAGING $SERVER_OPENRESTY_CONF && if docker exec $OPENRESTY_CONTAINER openresty -t; then docker exec $OPENRESTY_CONTAINER openresty -s reload && rm -f $SERVER_OPENRESTY_BACKUP $SERVER_OPENRESTY_STAGING; else cp $SERVER_OPENRESTY_BACKUP $SERVER_OPENRESTY_CONF; rm -f $SERVER_OPENRESTY_STAGING; exit 1; fi"
 
 # --- Sync admin credentials ---
 

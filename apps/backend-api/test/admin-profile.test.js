@@ -37,6 +37,8 @@ test('deploy updates the real OpenResty site without stopping the full stack', (
   const deploy = fs.readFileSync(path.join(repoRoot, 'scripts/deploy.sh'), 'utf8')
 
   assert.match(deploy, /je1ght\.top\.conf/)
+  assert.match(deploy, /SERVER_OPENRESTY_STAGING/)
+  assert.doesNotMatch(deploy, /SERVER_OPENRESTY_CONF\.next/)
   assert.match(deploy, /docker compose up -d --no-deps backend-api/)
   assert.match(deploy, /openresty -t/)
   assert.match(deploy, /openresty -s reload/)
@@ -46,6 +48,7 @@ test('deploy updates the real OpenResty site without stopping the full stack', (
   assert.match(deploy, /Snapshot mismatch/)
   assert.match(deploy, /--exclude='source\/_data\/site_profile\.yml'/)
   assert.match(deploy, /--exclude='source\/_data\/portfolio\.yml'/)
+  assert.doesNotMatch(deploy, /npm install --silent/)
 })
 
 test('admin profile editor owns the Formspree endpoint setting', () => {
