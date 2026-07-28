@@ -290,6 +290,43 @@
   font-size: .84rem;
 }
 
+#portal-music-panel .aplayer {
+  margin: 0;
+  background: var(--portal-surface-strong);
+  color: var(--portal-text);
+  box-shadow: none;
+}
+
+#portal-music-panel .aplayer :where(.aplayer-info, .aplayer-list) {
+  border-color: var(--portal-border);
+}
+
+#portal-music-panel .aplayer :where(
+  .aplayer-title,
+  .aplayer-list-title,
+  .aplayer-icon,
+  .aplayer-time
+) {
+  color: var(--portal-text);
+}
+
+#portal-music-panel .aplayer :where(
+  .aplayer-author,
+  .aplayer-list-author,
+  .aplayer-list-index
+) {
+  color: var(--portal-muted);
+}
+
+#portal-music-panel .aplayer-list li {
+  border-color: var(--portal-border);
+}
+
+#portal-music-panel .aplayer-list li:hover,
+#portal-music-panel .aplayer-list li.aplayer-list-light {
+  background: var(--portal-accent-soft);
+}
+
 .portal-music-panel--hidden {
   opacity: 0;
   pointer-events: none;
