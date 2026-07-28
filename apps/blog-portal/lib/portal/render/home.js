@@ -1,6 +1,7 @@
 const { array, CONFIG, text } = require('./data')
 const { escapeHtml, tag } = require('./html')
 const { projectCard, recentPosts } = require('./components')
+const { uiText } = require('./ui')
 
 module.exports = function renderHome(context, { siteLocals } = {}) {
   const { navigation, portfolio, profile } = context.data(siteLocals)
@@ -27,7 +28,7 @@ module.exports = function renderHome(context, { siteLocals } = {}) {
     ? tag(
         'section',
         { class: 'portal-section portal-shortcuts' },
-        `${tag('div', { class: 'portal-section-heading' }, `${tag('p', { class: 'portal-eyebrow' }, 'Directory')}${tag('h2', {}, escapeHtml(text(navigation.home_shortcuts?.title, text(home.shortcuts_title, 'Explore'))))}`)}
+        `${tag('div', { class: 'portal-section-heading' }, uiText('home.shortcutsTitle', text(navigation.home_shortcuts?.title, text(home.shortcuts_title, 'Explore')), { name: 'h2' }))}
         ${tag(
           'div',
           { class: 'portal-card-grid portal-card-grid--shortcuts' },
@@ -52,7 +53,7 @@ module.exports = function renderHome(context, { siteLocals } = {}) {
     ? tag(
         'section',
         { class: 'portal-section portal-portfolio-preview' },
-        `${tag('div', { class: 'portal-section-heading' }, `${tag('p', { class: 'portal-eyebrow' }, 'Selected work')}${tag('h2', {}, escapeHtml(text(portfolio.section?.home_preview_title, 'Project Preview')))}`)}
+        `${tag('div', { class: 'portal-section-heading' }, uiText('home.portfolioPreviewTitle', text(portfolio.section?.home_preview_title, 'Selected projects'), { name: 'h2' }))}
         ${tag('div', { class: 'portal-card-grid portal-card-grid--projects' }, cards.slice(0, CONFIG.PORTFOLIO_PREVIEW_LIMIT).map((card) => projectCard(context, card)).join(''))}`,
       )
     : ''

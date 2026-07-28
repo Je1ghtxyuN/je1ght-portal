@@ -1,5 +1,6 @@
 const { array, CONFIG, text } = require('./data')
 const { escapeHtml, stripHtml, tag } = require('./html')
+const { uiText } = require('./ui')
 
 function date(value) {
   const parsed = new Date(value)
@@ -9,22 +10,21 @@ function date(value) {
 function projectCard(context, card = {}) {
   const links = card.links || {}
   const actions = [
-    ['Demo', links.demo],
-    ['Repository', links.repo],
-    ['Article', links.article],
+    ['portfolio.demo', 'Demo', links.demo],
+    ['portfolio.repository', 'Repository', links.repo],
+    ['portfolio.article', 'Article', links.article],
   ]
-    .filter(([, url]) => url)
-    .map(([label, url]) =>
-      tag(
-        'a',
-        {
+    .filter(([, , url]) => url)
+    .map(([key, label, url]) =>
+      uiText(key, label, {
+        name: 'a',
+        attrs: {
           class: 'portal-button',
           href: context.href(url),
           rel: context.external(url) ? 'noopener noreferrer' : null,
           target: context.external(url) ? '_blank' : null,
         },
-        escapeHtml(label),
-      ),
+      }),
     )
     .join('')
 
@@ -67,12 +67,18 @@ function recentPosts(context, siteLocals, home = {}) {
           })
           .join(''),
       )
-    : tag('div', { class: 'portal-empty-state' }, tag('p', {}, escapeHtml(text(home.recent_posts_empty_text, 'No posts yet.'))))
+    : tag(
+        'div',
+        { class: 'portal-empty-state' },
+        uiText('home.emptyPosts', text(home.recent_posts_empty_text, 'No posts yet'), {
+          name: 'p',
+        }),
+      )
 
   return tag(
     'section',
     { class: 'portal-section portal-recent-writing' },
-    `${tag('div', { class: 'portal-section-heading' }, `${tag('p', { class: 'portal-eyebrow' }, 'Journal')}${tag('h2', {}, escapeHtml(text(home.recent_posts_title, 'Recent Writing')))}`)}${body}`,
+    `${tag('div', { class: 'portal-section-heading' }, uiText('home.recentPostsTitle', text(home.recent_posts_title, 'Recent posts'), { name: 'h2' }))}${body}`,
   )
 }
 
