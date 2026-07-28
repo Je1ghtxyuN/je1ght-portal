@@ -33,6 +33,28 @@ test('production compose exposes API services only on server loopback', () => {
   assert.doesNotMatch(compose, /MYSQL_PASSWORD:\s+\d+/)
 })
 
+test('every Prisma migration directory contains a migration file', () => {
+  const migrationsRoot = path.join(root, 'prisma/migrations')
+  const emptyMigrations = fs
+    .readdirSync(migrationsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .filter((name) => !fs.existsSync(path.join(migrationsRoot, name, 'migration.sql')))
+
+  assert.deepEqual(emptyMigrations, [])
+})
+
+test('portal migration history excludes conflicting duplicate Study migrations', () => {
+  const migrationsRoot = path.join(root, 'prisma/migrations')
+  const migrationSql = fs
+    .readdirSync(migrationsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => fs.readFileSync(path.join(migrationsRoot, entry.name, 'migration.sql'), 'utf8'))
+    .join('\n')
+
+  assert.doesNotMatch(migrationSql, /\bTodoItem\b|ALTER TABLE `StudyUser` ADD COLUMN `preferences`/)
+})
+
 test('deploy updates the real OpenResty site without stopping the full stack', () => {
   const deploy = fs.readFileSync(path.join(repoRoot, 'scripts/deploy.sh'), 'utf8')
 
