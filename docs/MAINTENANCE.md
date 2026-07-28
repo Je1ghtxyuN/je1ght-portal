@@ -72,6 +72,14 @@ Butterfly adapters. To use another Hexo theme:
 4. keep the renderer, `portal-ui` catalogs, locale core, music controller,
    content snapshots, and Formspree renderer unchanged.
 
+### Butterfly visual adapter
+
+Shared Portal tokens, authored content, and UI locale catalogs are
+theme-independent. Butterfly-generated taxonomy/archive markup is styled only
+by `source/css/portal/butterfly-pages.css`. When replacing Butterfly, remove
+that injected stylesheet and provide an equivalent adapter for the new theme;
+do not move its selectors into shared Portal layers.
+
 If a theme adapter cannot find its preferred toolbar mount, the current browser
 adapter creates a generic `[data-portal-toolbar]` fallback so language and music
 remain usable.

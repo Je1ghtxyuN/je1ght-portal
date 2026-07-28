@@ -46,6 +46,36 @@ test('Butterfly category and tag detail pages use taxonomy visuals', () => {
   )
 })
 
+test('generated archive and taxonomy pages expose visual hooks and the adapter stylesheet', () => {
+  const publicRoot = path.join(root, 'public')
+  const detailPage = (family) => {
+    const familyRoot = path.join(publicRoot, family)
+    const entries = fs.readdirSync(familyRoot, { recursive: true })
+    const detail = entries.find(
+      (entry) =>
+        entry.endsWith(path.sep + 'index.html') &&
+        entry !== 'index.html',
+    )
+
+    assert.ok(detail, `expected a generated ${family} detail page`)
+    return path.join(familyRoot, detail)
+  }
+  const pages = [
+    [path.join(publicRoot, 'archives/index.html'), 'id="archive"'],
+    [path.join(publicRoot, 'archives/2026/index.html'), 'id="archive"'],
+    [path.join(publicRoot, 'categories/index.html'), 'type-categories'],
+    [detailPage('categories'), 'id="category"'],
+    [path.join(publicRoot, 'tags/index.html'), 'type-tags'],
+    [detailPage('tags'), 'id="tag"'],
+  ]
+
+  for (const [file, hook] of pages) {
+    const html = fs.readFileSync(file, 'utf8')
+    assert.match(html, new RegExp(hook))
+    assert.match(html, /\/css\/portal\/butterfly-pages\.css\?v=/)
+  }
+})
+
 test('theme-independent layers do not contain Butterfly taxonomy selectors', () => {
   const shared = [
     'tokens.css',
