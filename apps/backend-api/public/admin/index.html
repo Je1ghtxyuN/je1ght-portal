@@ -3,28 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
+  <meta name="theme-color" content="#0b1220">
+  <title>Je1ght Portal — Owner Console</title>
   <base href="/admin/">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="app">
     <div id="login-view" class="view">
-      <div class="login-card">
-        <h1>Admin Login</h1>
-        <form id="login-form">
+      <main class="login-shell">
+        <section class="login-brand" aria-label="Je1ght Portal">
+          <a class="login-brand-home" href="/" aria-label="Return to Je1ght Portal">
+            <span class="login-brand-mark" aria-hidden="true">J</span>
+            <span>Je1ght Portal</span>
+          </a>
+          <div class="login-brand-copy">
+            <p class="login-eyebrow">Owner console</p>
+            <h1>Write, curate,<br>and publish.</h1>
+            <p>One quiet workspace for your notes, projects, profile, and the details that shape the public portal.</p>
+          </div>
+          <p class="login-brand-foot">je1ght.top <span aria-hidden="true">·</span> Private administration</p>
+        </section>
+
+        <section class="login-card" aria-labelledby="login-title">
+          <p class="login-kicker">Secure access</p>
+          <h2 id="login-title">Welcome back</h2>
+          <p class="login-intro">Sign in with the owner credentials configured on your server.</p>
+          <form id="login-form">
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" required>
+            <input type="email" id="email" autocomplete="email" inputmode="email" required>
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" required>
+            <input type="password" id="password" autocomplete="current-password" required>
           </div>
-          <button type="submit" class="btn btn-primary">Login</button>
-          <p id="login-error" class="error"></p>
-        </form>
-      </div>
+            <button type="submit" class="btn btn-primary login-submit" id="login-submit">Sign in</button>
+            <p id="login-error" class="error" aria-live="polite"></p>
+          </form>
+          <a class="login-back-link" href="/">← Back to the public site</a>
+        </section>
+      </main>
     </div>
 
     <div id="dashboard-view" class="view" style="display:none">
@@ -191,6 +210,7 @@
             <div class="form-group">
               <label for="pf-contact-formspree">Formspree Endpoint</label>
               <input type="url" id="pf-contact-formspree" placeholder="https://formspree.io/f/your-id">
+              <p class="hint">Admin owns this value. The public contact form submits directly to your email through this Formspree endpoint after the next rebuild.</p>
             </div>
           </section>
 

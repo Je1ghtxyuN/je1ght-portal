@@ -19,6 +19,18 @@ test('admin profile editor owns the Formspree endpoint setting', () => {
 
   assert.match(html, /id="pf-contact-formspree"/)
   assert.match(html, /Formspree Endpoint/i)
+  assert.match(html, /directly to your email/i)
   assert.match(script, /pf-contact-formspree/)
   assert.match(script, /formspree_endpoint/)
+})
+
+test('admin login has branded and accessible sign-in structure', () => {
+  const html = fs.readFileSync(path.join(root, 'public/admin/index.html'), 'utf8')
+
+  assert.match(html, /class="login-shell"/)
+  assert.match(html, /class="login-brand"/)
+  assert.match(html, /autocomplete="email"/)
+  assert.match(html, /autocomplete="current-password"/)
+  assert.match(html, /id="login-error"[^>]*aria-live="polite"/)
+  assert.match(html, /id="login-submit"/)
 })

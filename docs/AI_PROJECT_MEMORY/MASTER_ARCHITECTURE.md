@@ -325,14 +325,19 @@ The comment system should be self-hosted and tied to the backend service, not ou
 
 ## Contact Form Strategy
 
-The legacy Formspree integration is transitional and should be replaced.
+Current owner decision (2026-07-28): keep Formspree because contact submissions
+must be forwarded directly to email. This decision supersedes the earlier
+self-hosted-message proposal below.
 
-### Recommended Model
+### Current Model
 
-- public contact form posts to the backend service
-- submissions stored in MySQL
-- admin can review messages in the admin system
-- optional SMTP notification on new messages
+- Admin owns the HTTPS endpoint in `SiteProfile.contact.formspree_endpoint`
+- the Hexo contact form posts directly to Formspree
+- Formspree forwards submissions to the owner's configured email
+- no duplicate `ContactMessage` model or backend intake route
+
+If requirements later change to require message history or moderation, treat a
+self-hosted inbox as a new migration project rather than maintaining both flows.
 
 ### Abuse Control Baseline
 

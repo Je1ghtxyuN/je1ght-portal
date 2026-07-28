@@ -1,12 +1,26 @@
 const API = ''
 
 async function api(path, options = {}) {
-  const res = await fetch(`${API}${path}`, {
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-    ...options,
-  })
-  const data = await res.json()
+  let res
+  try {
+    res = await fetch(`${API}${path}`, {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json', ...options.headers },
+      ...options,
+    })
+  } catch {
+    throw new Error('Unable to reach the admin service. Please check the connection and try again.')
+  }
+
+  const body = await res.text()
+  let data = {}
+  if (body) {
+    try {
+      data = JSON.parse(body)
+    } catch {
+      if (!res.ok) throw new Error(`Admin service returned HTTP ${res.status}`)
+    }
+  }
   if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`)
   return data
 }
@@ -43,16 +57,23 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
   e.preventDefault()
   const email = document.getElementById('email').value
   const password = document.getElementById('password').value
+  const error = document.getElementById('login-error')
+  const submit = document.getElementById('login-submit')
+  error.textContent = ''
+  submit.disabled = true
+  submit.textContent = 'Signing in…'
   try {
     await api('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     })
-    document.getElementById('login-error').textContent = ''
     showView('dashboard')
     loadTab('posts')
   } catch (err) {
-    document.getElementById('login-error').textContent = err.message
+    error.textContent = err.message
+  } finally {
+    submit.disabled = false
+    submit.textContent = 'Sign in'
   }
 })
 

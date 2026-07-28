@@ -22,8 +22,9 @@ the custom homepage consistently. `PORTAL_BUILD_VERSION` is injected in memory;
 there is no post-build text replacement or generator renaming.
 
 `npm run validate` rejects unresolved version placeholders, placeholder domains,
-third-party Formspree endpoints, malformed language values, duplicate IDs, and
-broken internal links/assets.
+malformed language values, duplicate IDs, and broken internal links/assets.
+The configured Formspree endpoint is intentional and is covered by renderer
+tests.
 
 The backend image generates Prisma Client during build. Container startup runs
 `prisma migrate deploy` before starting Hono, so committed migrations must be

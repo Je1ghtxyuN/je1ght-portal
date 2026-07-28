@@ -35,11 +35,19 @@ Do not edit generated `public/` files.
 | Theme projection | `lib/portal/theme-projection.js` |
 | Visual tokens and layers | `source/css/portal/` |
 | Browser behavior | `source/js/portal-*.js` |
-| Contact API | `apps/backend-api/src/routes/contact.js` |
+| Contact form destination | Admin → Site Profile → `contact.formspree_endpoint` |
+| Admin UI | `apps/backend-api/public/admin/` |
+| Origin routes | `infra/nginx/default.conf` |
 
 Profile fields projected into Butterfly are intentionally blank in
 `_config.butterfly.yml`. Editing those blank placeholders does not work because
 `portal-data-sync.js` derives their values during generation.
+
+Admin profile changes are stored in MySQL immediately but do not alter the
+already-generated public HTML. Click **Rebuild Portal** after saving. That
+rebuild exports the profile and portfolio snapshots, then runs Hexo. Use
+`scripts/content-snapshot.sh pull` afterward and commit the reviewed YAML diff
+to keep GitHub aligned with production.
 
 ## Content snapshots
 
@@ -58,12 +66,21 @@ When `portfolio.yml` has no cards, the main menu, homepage shortcut, and
 homepage preview automatically omit Portfolio. Add real items through Admin,
 export the snapshot, and rebuild to restore those surfaces.
 
-## Contact messages
+## Contact form
 
-The public form posts JSON to `/api/contact`, which nginx proxies to the Hono
-`/contact` route. The server validates length and email format, ignores the
-honeypot field, rate-limits by hashed client address, and stores messages in
-`ContactMessage`. Docker startup runs `prisma migrate deploy` before the API.
+The public form uses ordinary HTML POST directly to the HTTPS Formspree endpoint
+stored in `SiteProfile.contact.formspree_endpoint`; Formspree forwards the
+message to the email configured in its account. The checked-in YAML value is a
+rebuild snapshot, not a competing source. If the endpoint is blank or invalid,
+the renderer shows an email fallback and does not invent a submission target.
+
+## Admin routing
+
+The `/admin/` nginx location must use `^~`. Without it, nginx's later generic
+`.css` and `.js` regex locations win and look for Admin assets in the portal
+static root. The result is an unstyled page with no login JavaScript even while
+`/auth/login` itself remains healthy. A backend regression test protects this
+precedence rule.
 
 ## Optional integrations
 
