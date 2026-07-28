@@ -1,0 +1,42 @@
+:root {
+  --theme-color: #2f716b;
+  --theme-color-op: rgb(47 113 107 / 12%);
+  --portal-accent: #2f716b;
+  --portal-accent-soft: #dcebe7;
+  --portal-accent-alt: #a25472;
+  --portal-bg: #f3f1eb;
+  --portal-surface: rgb(255 255 255 / 86%);
+  --portal-surface-strong: #fff;
+  --portal-text: #17242d;
+  --portal-muted: #5d6870;
+  --portal-border: rgb(23 36 45 / 12%);
+  --portal-shadow: 0 18px 50px rgb(24 39 49 / 9%);
+  --portal-shadow-hover: 0 22px 58px rgb(24 39 49 / 14%);
+  --portal-radius-sm: 8px;
+  --portal-radius-md: 16px;
+  --portal-radius-lg: 24px;
+  --portal-space-1: .375rem;
+  --portal-space-2: .75rem;
+  --portal-space-3: 1rem;
+  --portal-space-4: 1.5rem;
+  --portal-space-5: 2.25rem;
+  --portal-space-6: 3.5rem;
+  --portal-content: 72rem;
+  --portal-reading: 70ch;
+}
+
+[data-theme='dark'] {
+  --theme-color: #70bbb2;
+  --theme-color-op: rgb(112 187 178 / 14%);
+  --portal-accent: #70bbb2;
+  --portal-accent-soft: #173b3b;
+  --portal-accent-alt: #d28aa7;
+  --portal-bg: #0c141e;
+  --portal-surface: rgb(18 30 43 / 90%);
+  --portal-surface-strong: #142130;
+  --portal-text: #e7edf1;
+  --portal-muted: #aebac3;
+  --portal-border: rgb(214 230 238 / 13%);
+  --portal-shadow: 0 20px 60px rgb(0 0 0 / 25%);
+  --portal-shadow-hover: 0 24px 66px rgb(0 0 0 / 36%);
+}

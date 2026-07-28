@@ -1,59 +1,35 @@
 (function portalHero() {
+  'use strict'
+
   var page = document.querySelector('.type-portal-home')
-  if (!page) return
-
-  // Smooth gradient transition from hero bg to content area
-  var style = document.createElement('style')
-  style.textContent = [
-    '.type-portal-home #page-header::after {',
-    '  content:"";',
-    '  position:absolute;',
-    '  bottom:0; left:0; right:0;',
-    '  height:120px;',
-    '  background:linear-gradient(to bottom, transparent, #0d0d0d);',
-    '  z-index:1;',
-    '  pointer-events:none;',
-    '}',
-    '[data-theme="light"] .type-portal-home #page-header::after {',
-    '  background:linear-gradient(to bottom, transparent, #ffffff);',
-    '}'
-  ].join('')
-  document.head.appendChild(style)
-
   var header = document.getElementById('page-header')
-  if (!header) return
+  if (!page || !header || header.dataset.portalHeroReady === 'true') return
+  header.dataset.portalHeroReady = 'true'
 
-  // Read profile data from embedded JSON
   var data = {}
   var dataNode = document.getElementById('portal-hero-data')
-  if (dataNode) {
-    try { data = JSON.parse(dataNode.textContent || '{}') } catch (e) {}
+  try {
+    data = JSON.parse(dataNode ? dataNode.textContent || '{}' : '{}')
+  } catch (_error) {
+    data = {}
   }
 
   var displayName = data.display_name || 'Je1ghtxyuN'
-  var avatarPath = data.avatar_path || '/shared-assets/images/profile.jpg'
-  var introText = data.intro_short || ''
+  var motionAllowed = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  var phrases = data.hero_phrases && data.hero_phrases.length
+    ? data.hero_phrases
+    : ['Code, Anime, Games, and Coffee.']
 
-  // Hide Butterfly's default page title in the hero (we have our own hero info)
-  var siteTitle = document.getElementById('site-title')
-  if (siteTitle) siteTitle.style.display = 'none'
-
-  // Replace "Home" with "Je1ghtxyuN" in the nav bar top-left (no translation)
-  var siteName = document.querySelector('#blog-info .site-name')
-  if (siteName) siteName.textContent = 'Je1ghtxyuN'
-
-  // Create hero info container
   var heroInfo = document.createElement('div')
   heroInfo.className = 'portal-hero-info'
 
-  // Avatar
   var avatar = document.createElement('img')
   avatar.className = 'portal-hero-info__avatar'
-  avatar.src = avatarPath
+  avatar.src = data.avatar_path || '/shared-assets/images/profile.jpg'
   avatar.alt = displayName
+  avatar.fetchPriority = 'high'
   avatar.onerror = function () { this.src = '/img/friend_404.gif' }
 
-  // Name + subtitle group
   var textGroup = document.createElement('div')
   textGroup.className = 'portal-hero-info__text'
 
@@ -63,96 +39,66 @@
 
   var subtitle = document.createElement('div')
   subtitle.className = 'portal-hero-info__subtitle'
-
-  var cursor = document.createElement('span')
-  cursor.className = 'typed-cursor'
-  cursor.textContent = '|'
+  subtitle.setAttribute('aria-live', 'off')
 
   var intro = document.createElement('p')
   intro.className = 'portal-hero-info__intro'
-  intro.textContent = introText
+  intro.textContent = data.intro_short || ''
 
   textGroup.appendChild(name)
   textGroup.appendChild(subtitle)
-  if (introText) textGroup.appendChild(intro)
-
+  if (intro.textContent) textGroup.appendChild(intro)
   heroInfo.appendChild(avatar)
   heroInfo.appendChild(textGroup)
   header.appendChild(heroInfo)
 
-  // Scroll hint
-  var scrollHint = document.createElement('div')
+  var scrollHint = document.createElement('button')
   scrollHint.className = 'portal-scroll-hint'
-  scrollHint.textContent = '▼  scroll down'
+  scrollHint.type = 'button'
+  scrollHint.textContent = 'Read the latest ↓'
   scrollHint.addEventListener('click', function () {
     var main = document.getElementById('content-inner')
-    if (main) {
-      main.scrollIntoView({ behavior: 'smooth' })
-    }
+    if (main) main.scrollIntoView({ behavior: motionAllowed ? 'smooth' : 'auto' })
   })
   header.appendChild(scrollHint)
 
-  // Typewriter effect
-  var phrases = (data.hero_phrases && data.hero_phrases.length > 0)
-    ? data.hero_phrases
-    : ['Code, Anime, Games, and Coffee.', 'VR, HCI, and game dev.', "Writing things down so I don't forget."]
+  var siteName = document.querySelector('#blog-info .site-name')
+  if (siteName) siteName.textContent = displayName
+  var nav = header.querySelector('#nav')
+  if (nav) nav.classList.add('portal-nav-transparent')
+
+  if (!motionAllowed) {
+    subtitle.textContent = phrases[0]
+    return
+  }
+
   var phraseIndex = 0
   var charIndex = 0
-  var isDeleting = false
-  var typeSpeed = 60
-  var deleteSpeed = 30
-  var pauseBetween = 2000
+  var deleting = false
+  function typePhrase() {
+    var phrase = phrases[phraseIndex]
+    charIndex += deleting ? -1 : 1
+    subtitle.textContent = phrase.slice(0, charIndex)
 
-  function type() {
-    var currentPhrase = phrases[phraseIndex]
-
-    if (isDeleting) {
-      subtitle.textContent = currentPhrase.substring(0, charIndex - 1)
-      charIndex--
-    } else {
-      subtitle.textContent = currentPhrase.substring(0, charIndex + 1)
-      charIndex++
-    }
-
-    subtitle.appendChild(cursor)
-
-    if (!isDeleting && charIndex === currentPhrase.length) {
-      setTimeout(function () {
-        isDeleting = true
-        type()
-      }, pauseBetween)
+    if (!deleting && charIndex === phrase.length) {
+      deleting = true
+      window.setTimeout(typePhrase, 1800)
       return
     }
-
-    if (isDeleting && charIndex === 0) {
-      isDeleting = false
+    if (deleting && charIndex === 0) {
+      deleting = false
       phraseIndex = (phraseIndex + 1) % phrases.length
-      setTimeout(type, 400)
-      return
     }
-
-    setTimeout(type, isDeleting ? deleteSpeed : typeSpeed)
+    window.setTimeout(typePhrase, deleting ? 28 : 52)
   }
+  window.setTimeout(typePhrase, 450)
 
-  setTimeout(type, 800)
-
-  // Make header nav transparent
-  var nav = header.querySelector('#nav')
-  if (nav) {
-    nav.classList.add('portal-nav-transparent')
-  }
-
-  // Background rotation
   var backgrounds = data.hero_backgrounds || []
-  var rotationInterval = (data.hero_rotation_interval || 300) * 1000
-
   if (backgrounds.length > 1) {
-    var bgIndex = 0
-    setInterval(function () {
-      bgIndex = (bgIndex + 1) % backgrounds.length
-      if (header) {
-        header.style.backgroundImage = 'url(' + backgrounds[bgIndex] + ')'
-      }
-    }, rotationInterval)
+    var backgroundIndex = 0
+    window.setInterval(function () {
+      backgroundIndex = (backgroundIndex + 1) % backgrounds.length
+      header.style.backgroundImage = 'url("' + backgrounds[backgroundIndex] + '")'
+    }, Math.max(30, data.hero_rotation_interval || 300) * 1000)
   }
 })()

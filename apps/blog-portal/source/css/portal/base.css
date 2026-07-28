@@ -1,0 +1,84 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at 8% 18%, rgb(47 113 107 / 8%), transparent 28rem),
+    radial-gradient(circle at 92% 72%, rgb(162 84 114 / 6%), transparent 30rem),
+    var(--portal-bg);
+  color: var(--portal-text);
+}
+
+::selection {
+  background: var(--portal-accent);
+  color: #fff;
+}
+
+a,
+button,
+input,
+textarea {
+  accent-color: var(--portal-accent);
+}
+
+:where(a, button, input, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--portal-accent-alt);
+  outline-offset: 3px;
+}
+
+#content-inner.layout {
+  max-width: var(--portal-content);
+}
+
+#page,
+#post,
+.card-widget,
+.recent-post-item {
+  border: 1px solid var(--portal-border);
+  box-shadow: var(--portal-shadow);
+}
+
+#article-container {
+  color: var(--portal-text);
+}
+
+#article-container :where(p, li) {
+  line-height: 1.85;
+}
+
+#article-container > :where(p, ul, ol, blockquote) {
+  max-width: var(--portal-reading);
+}
+
+#footer {
+  background: #162833;
+}
+
+[data-theme='dark'] #footer {
+  background: #081019;
+}
+
+.type-portal-home #page,
+.type-portal-about #page,
+.type-portal-portfolio #page,
+.type-portal-contact #page {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.type-portal-home #page .page-title,
+.type-portal-about #page .page-title,
+.type-portal-portfolio #page .page-title,
+.type-portal-contact #page .page-title {
+  display: none;
+}
+
+.type-portal-home #article-container,
+.type-portal-about #article-container,
+.type-portal-portfolio #article-container,
+.type-portal-contact #article-container {
+  margin: 0;
+  padding: 0;
+}

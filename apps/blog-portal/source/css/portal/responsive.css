@@ -1,0 +1,61 @@
+@media (max-width: 768px) {
+  .type-portal-home #page-header {
+    height: 64svh;
+    min-height: 31rem;
+    background-position: 62% center;
+  }
+
+  .portal-hero-info {
+    width: min(32rem, calc(100% - 2rem));
+    justify-items: start;
+    gap: var(--portal-space-3);
+    grid-template-columns: 1fr;
+  }
+
+  .portal-hero-info__avatar {
+    width: 5.75rem;
+  }
+
+  .portal-hero-info__name {
+    font-size: clamp(2.65rem, 14vw, 4.25rem);
+  }
+
+  .portal-scroll-hint {
+    display: none;
+  }
+
+  .portal-page {
+    gap: var(--portal-space-5);
+  }
+
+  .portal-card-grid--shortcuts {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-shortcut-card {
+    min-height: 5.5rem;
+  }
+
+  .portal-post-card {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-post-card .portal-card__copy {
+    grid-column: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

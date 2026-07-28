@@ -1047,8 +1047,12 @@ css_prefix: true
 # 向 <head> 和 <body> 底部注入自定义 CSS / JS
 inject:
   head:
-    # 自定义 CSS（portal 页面样式），BUILD_VER 在部署时替换为时间戳用于缓存爆破
-    - <link rel="stylesheet" href="/css/portal-custom.css?v=BUILD_VER">
+    # Portal CSS 分层：令牌 → 基础 → Hero → 组件 → 响应式
+    - <link rel="stylesheet" href="/css/portal/tokens.css?v=BUILD_VER">
+    - <link rel="stylesheet" href="/css/portal/base.css?v=BUILD_VER">
+    - <link rel="stylesheet" href="/css/portal/hero.css?v=BUILD_VER">
+    - <link rel="stylesheet" href="/css/portal/components.css?v=BUILD_VER">
+    - <link rel="stylesheet" href="/css/portal/responsive.css?v=BUILD_VER">
   bottom:
     # 自定义 Hero 脚本（首页打字机效果、头像、背景旋转）
     - <script src="/js/portal-hero.js?v=BUILD_VER" defer></script>
