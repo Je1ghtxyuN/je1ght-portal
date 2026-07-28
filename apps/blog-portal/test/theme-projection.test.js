@@ -16,7 +16,10 @@ function createInput() {
       search: { placeholder: 'Search...' },
       inject: {
         head: ['<link rel="stylesheet" href="/css/portal-custom.css?v=BUILD_VER">'],
-        bottom: ['<script src="/js/portal-hero.js?v=BUILD_VER" defer></script>'],
+        bottom: [
+          '<script src="/js/portal-hero.js?v=BUILD_VER" defer></script>',
+          '<script src="/js/portal-music-player.js?v=BUILD_VER" defer></script>',
+        ],
       },
     },
     profile: {
@@ -71,6 +74,19 @@ test('injects a resolved build version and locale bootstrap', () => {
   assert.match(injected, /v=test-sha/)
   assert.match(injected, /id="portal-i18n-config"/)
   assert.doesNotMatch(injected, /BUILD_VER/)
+})
+
+test('loads locale core and theme adapter before the music panel', () => {
+  const result = projectThemeConfig(createInput())
+  const bottom = result.inject.bottom.join('\n')
+  const coreIndex = bottom.indexOf('/js/portal-locale-core.js')
+  const adapterIndex = bottom.indexOf('/js/adapters/butterfly-adapter.js')
+  const musicIndex = bottom.indexOf('/js/portal-music-player.js')
+
+  assert.ok(coreIndex >= 0)
+  assert.ok(adapterIndex > coreIndex)
+  assert.ok(musicIndex > adapterIndex)
+  assert.equal(bottom.match(/\/js\/portal-music-player\.js/g)?.length, 1)
 })
 
 test('does not inject runtime favicon mutation', () => {

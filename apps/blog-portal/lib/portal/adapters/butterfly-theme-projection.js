@@ -104,6 +104,11 @@ function projectButterflyThemeConfig({
     `<script src="/js/adapters/butterfly-adapter.js?v=${encodeURIComponent(buildVersion)}" defer></script>`,
     '/js/adapters/butterfly-adapter.js',
   )
+  bottom = appendUnique(
+    bottom,
+    `<script src="/js/portal-music-player.js?v=${encodeURIComponent(buildVersion)}" defer></script>`,
+    '/js/portal-music-player.js',
+  )
   projected.inject.head = head
   projected.inject.bottom = bottom
   return projected
