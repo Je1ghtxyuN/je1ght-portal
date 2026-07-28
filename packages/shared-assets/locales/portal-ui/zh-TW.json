@@ -1,0 +1,77 @@
+{
+  "controls": {
+    "theme": "切換亮暗模式",
+    "language": "選擇介面語言",
+    "settings": "設定",
+    "backToTop": "返回頂部"
+  },
+  "nav": {
+    "home": "首頁",
+    "archives": "彙整",
+    "categories": "分類",
+    "contact": "聯絡",
+    "friends": "友鏈",
+    "about": "關於",
+    "search": "搜尋"
+  },
+  "home": {
+    "scroll": "閱讀最新文章",
+    "shortcutsTitle": "探索",
+    "recentPostsTitle": "最近文章",
+    "portfolioPreviewTitle": "精選專案",
+    "emptyPosts": "暫時沒有文章"
+  },
+  "about": {
+    "title": "關於我",
+    "skillsTitle": "技能",
+    "experienceTitle": "經歷",
+    "emptySkills": "暫未設定技能",
+    "emptyExperience": "暫未設定經歷"
+  },
+  "portfolio": {
+    "title": "作品集",
+    "empty": "暫未設定專案",
+    "demo": "展示",
+    "repository": "程式碼倉庫",
+    "article": "相關文章"
+  },
+  "contact": {
+    "title": "聯絡",
+    "email": "電子郵件",
+    "location": "位置",
+    "name": "姓名",
+    "topic": "主題",
+    "message": "內容",
+    "namePlaceholder": "你的名字",
+    "emailPlaceholder": "you@example.com",
+    "topicPlaceholder": "你想交流什麼？",
+    "messagePlaceholder": "寫下你的訊息",
+    "submit": "傳送訊息",
+    "unavailableTitle": "聯絡表單暫不可用",
+    "unavailableWithEmail": "請使用上方顯示的電子郵件聯絡",
+    "unavailable": "請稍後再試"
+  },
+  "sidebar": {
+    "recentPosts": "最新文章",
+    "contents": "目錄",
+    "announcement": "公告",
+    "postSeries": "系列文章",
+    "tags": "標籤",
+    "categories": "分類",
+    "archives": "彙整",
+    "websiteInfo": "網站資訊",
+    "aboutThisSite": "關於本站",
+    "articles": "文章"
+  },
+  "search": {
+    "placeholder": "搜尋"
+  },
+  "music": {
+    "open": "開啟音樂播放器",
+    "close": "關閉音樂播放器",
+    "title": "音樂",
+    "initial": "開啟播放器後載入音樂",
+    "loading": "正在載入音樂",
+    "unavailable": "音樂服務暫時無法使用"
+  }
+}

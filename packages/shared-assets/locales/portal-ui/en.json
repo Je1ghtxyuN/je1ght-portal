@@ -1,0 +1,77 @@
+{
+  "controls": {
+    "theme": "Toggle color theme",
+    "language": "Choose interface language",
+    "settings": "Settings",
+    "backToTop": "Back to top"
+  },
+  "nav": {
+    "home": "Home",
+    "archives": "Archives",
+    "categories": "Categories",
+    "contact": "Contact",
+    "friends": "Friends",
+    "about": "About",
+    "search": "Search"
+  },
+  "home": {
+    "scroll": "Read the latest",
+    "shortcutsTitle": "Explore",
+    "recentPostsTitle": "Recent posts",
+    "portfolioPreviewTitle": "Selected projects",
+    "emptyPosts": "No posts yet"
+  },
+  "about": {
+    "title": "About me",
+    "skillsTitle": "Skills",
+    "experienceTitle": "Experience",
+    "emptySkills": "No skills configured",
+    "emptyExperience": "No experience configured"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "empty": "No portfolio items configured",
+    "demo": "Demo",
+    "repository": "Repository",
+    "article": "Article"
+  },
+  "contact": {
+    "title": "Contact",
+    "email": "Email",
+    "location": "Location",
+    "name": "Name",
+    "topic": "Topic",
+    "message": "Message",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "you@example.com",
+    "topicPlaceholder": "What would you like to discuss?",
+    "messagePlaceholder": "Write your message",
+    "submit": "Send message",
+    "unavailableTitle": "Contact form unavailable",
+    "unavailableWithEmail": "Please use the email address shown above",
+    "unavailable": "Please check back later"
+  },
+  "sidebar": {
+    "recentPosts": "Recent posts",
+    "contents": "Contents",
+    "announcement": "Announcement",
+    "postSeries": "Post series",
+    "tags": "Tags",
+    "categories": "Categories",
+    "archives": "Archives",
+    "websiteInfo": "Website information",
+    "aboutThisSite": "About this site",
+    "articles": "Articles"
+  },
+  "search": {
+    "placeholder": "Search"
+  },
+  "music": {
+    "open": "Open music player",
+    "close": "Close music player",
+    "title": "Music",
+    "initial": "Music loads when you open the player",
+    "loading": "Loading music",
+    "unavailable": "Music service is temporarily unavailable"
+  }
+}

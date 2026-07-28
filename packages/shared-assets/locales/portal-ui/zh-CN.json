@@ -1,0 +1,77 @@
+{
+  "controls": {
+    "theme": "切换亮暗模式",
+    "language": "选择界面语言",
+    "settings": "设置",
+    "backToTop": "返回顶部"
+  },
+  "nav": {
+    "home": "首页",
+    "archives": "归档",
+    "categories": "分类",
+    "contact": "联系",
+    "friends": "友链",
+    "about": "关于",
+    "search": "搜索"
+  },
+  "home": {
+    "scroll": "阅读最新文章",
+    "shortcutsTitle": "探索",
+    "recentPostsTitle": "最近文章",
+    "portfolioPreviewTitle": "精选项目",
+    "emptyPosts": "暂时没有文章"
+  },
+  "about": {
+    "title": "关于我",
+    "skillsTitle": "技能",
+    "experienceTitle": "经历",
+    "emptySkills": "暂未配置技能",
+    "emptyExperience": "暂未配置经历"
+  },
+  "portfolio": {
+    "title": "作品集",
+    "empty": "暂未配置项目",
+    "demo": "演示",
+    "repository": "代码仓库",
+    "article": "相关文章"
+  },
+  "contact": {
+    "title": "联系",
+    "email": "邮箱",
+    "location": "位置",
+    "name": "姓名",
+    "topic": "主题",
+    "message": "内容",
+    "namePlaceholder": "你的名字",
+    "emailPlaceholder": "you@example.com",
+    "topicPlaceholder": "你想交流什么？",
+    "messagePlaceholder": "写下你的消息",
+    "submit": "发送消息",
+    "unavailableTitle": "联系表单暂不可用",
+    "unavailableWithEmail": "请使用上方显示的邮箱联系",
+    "unavailable": "请稍后再试"
+  },
+  "sidebar": {
+    "recentPosts": "最新文章",
+    "contents": "目录",
+    "announcement": "公告",
+    "postSeries": "系列文章",
+    "tags": "标签",
+    "categories": "分类",
+    "archives": "归档",
+    "websiteInfo": "网站信息",
+    "aboutThisSite": "关于本站",
+    "articles": "文章"
+  },
+  "search": {
+    "placeholder": "搜索"
+  },
+  "music": {
+    "open": "打开音乐播放器",
+    "close": "关闭音乐播放器",
+    "title": "音乐",
+    "initial": "打开播放器后加载音乐",
+    "loading": "正在加载音乐",
+    "unavailable": "音乐服务暂时不可用"
+  }
+}

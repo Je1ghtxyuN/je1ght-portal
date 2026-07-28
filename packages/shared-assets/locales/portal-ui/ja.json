@@ -1,0 +1,77 @@
+{
+  "controls": {
+    "theme": "カラーテーマを切り替える",
+    "language": "表示言語を選択",
+    "settings": "設定",
+    "backToTop": "ページ上部へ戻る"
+  },
+  "nav": {
+    "home": "ホーム",
+    "archives": "アーカイブ",
+    "categories": "カテゴリー",
+    "contact": "連絡",
+    "friends": "リンク",
+    "about": "プロフィール",
+    "search": "検索"
+  },
+  "home": {
+    "scroll": "最新記事を読む",
+    "shortcutsTitle": "探す",
+    "recentPostsTitle": "最近の記事",
+    "portfolioPreviewTitle": "注目のプロジェクト",
+    "emptyPosts": "記事はまだありません"
+  },
+  "about": {
+    "title": "プロフィール",
+    "skillsTitle": "スキル",
+    "experienceTitle": "経歴",
+    "emptySkills": "スキルは未設定です",
+    "emptyExperience": "経歴は未設定です"
+  },
+  "portfolio": {
+    "title": "ポートフォリオ",
+    "empty": "プロジェクトは未設定です",
+    "demo": "デモ",
+    "repository": "リポジトリ",
+    "article": "関連記事"
+  },
+  "contact": {
+    "title": "連絡",
+    "email": "メール",
+    "location": "場所",
+    "name": "名前",
+    "topic": "件名",
+    "message": "メッセージ",
+    "namePlaceholder": "お名前",
+    "emailPlaceholder": "you@example.com",
+    "topicPlaceholder": "お問い合わせ内容",
+    "messagePlaceholder": "メッセージを入力してください",
+    "submit": "送信",
+    "unavailableTitle": "お問い合わせフォームを利用できません",
+    "unavailableWithEmail": "上記のメールアドレスをご利用ください",
+    "unavailable": "しばらくしてからお試しください"
+  },
+  "sidebar": {
+    "recentPosts": "最近の記事",
+    "contents": "目次",
+    "announcement": "お知らせ",
+    "postSeries": "記事シリーズ",
+    "tags": "タグ",
+    "categories": "カテゴリー",
+    "archives": "アーカイブ",
+    "websiteInfo": "サイト情報",
+    "aboutThisSite": "このサイトについて",
+    "articles": "記事"
+  },
+  "search": {
+    "placeholder": "検索"
+  },
+  "music": {
+    "open": "音楽プレーヤーを開く",
+    "close": "音楽プレーヤーを閉じる",
+    "title": "音楽",
+    "initial": "プレーヤーを開くと音楽を読み込みます",
+    "loading": "音楽を読み込んでいます",
+    "unavailable": "音楽サービスを一時的に利用できません"
+  }
+}
