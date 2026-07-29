@@ -5,6 +5,40 @@ const test = require('node:test')
 
 const cssRoot = path.resolve(__dirname, '../source/css/portal')
 
+function relativeLuminance(hex) {
+  const channels = hex
+    .slice(1)
+    .match(/.{2}/g)
+    .map((value) => Number.parseInt(value, 16) / 255)
+    .map((value) =>
+      value <= 0.04045
+        ? value / 12.92
+        : ((value + 0.055) / 1.055) ** 2.4,
+    )
+  return (
+    0.2126 * channels[0] +
+    0.7152 * channels[1] +
+    0.0722 * channels[2]
+  )
+}
+
+function contrastRatio(foreground, background) {
+  const light = Math.max(
+    relativeLuminance(foreground),
+    relativeLuminance(background),
+  )
+  const dark = Math.min(
+    relativeLuminance(foreground),
+    relativeLuminance(background),
+  )
+  return (light + 0.05) / (dark + 0.05)
+}
+
+function readRootHexToken(css, token) {
+  const root = css.match(/:root\s*\{(?<body>[\s\S]*?)\n\}/)?.groups.body
+  return root?.match(new RegExp(`${token}:\\s*(#[0-9a-f]{6})`, 'i'))?.[1]
+}
+
 test('visual system is split into explicit layers with accessibility fallbacks', () => {
   const layers = ['tokens.css', 'base.css', 'hero.css', 'components.css', 'responsive.css']
   const combined = layers
@@ -60,4 +94,10 @@ test('footer follows Portal light and dark theme tokens', () => {
   assert.match(base, /border-top:\s*1px solid var\(--portal-footer-border\)/)
   assert.match(base, /#footer a\s*\{[^}]*color:\s*inherit/)
   assert.doesNotMatch(base, /#footer\s*\{[^}]*background:\s*#[0-9a-f]{3,8}/i)
+
+  const lightBackground = readRootHexToken(tokens, '--portal-footer-bg')
+  const lightMuted = readRootHexToken(tokens, '--portal-footer-muted')
+  assert.ok(lightBackground)
+  assert.ok(lightMuted)
+  assert.ok(contrastRatio(lightMuted, lightBackground) >= 4.5)
 })

@@ -548,4 +548,3 @@ git -c http.version=HTTP/1.1 push -u origin agent/site-audit-implementation
 Update PR #1 with the taxonomy page, masthead transition, theme footer,
 verification, and production version results. Do not merge `main` without
 explicit authorization.
-
