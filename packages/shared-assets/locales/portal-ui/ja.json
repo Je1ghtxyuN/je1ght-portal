@@ -66,6 +66,9 @@
   "search": {
     "placeholder": "検索"
   },
+  "footer": {
+    "runtime": "サイト運営期間 {years}年 {days}日 {hours}時間 {minutes}分 {seconds}秒"
+  },
   "music": {
     "open": "音楽プレーヤーを開く",
     "close": "音楽プレーヤーを閉じる",

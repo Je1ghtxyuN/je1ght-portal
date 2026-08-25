@@ -101,6 +101,11 @@ function projectButterflyThemeConfig({
   )
   bottom = appendUnique(
     bottom,
+    `<script src="/js/portal-site-runtime.js?v=${encodeURIComponent(buildVersion)}" defer></script>`,
+    '/js/portal-site-runtime.js',
+  )
+  bottom = appendUnique(
+    bottom,
     `<script src="/js/adapters/butterfly-adapter.js?v=${encodeURIComponent(buildVersion)}" defer></script>`,
     '/js/adapters/butterfly-adapter.js',
   )

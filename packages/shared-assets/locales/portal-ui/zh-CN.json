@@ -66,6 +66,9 @@
   "search": {
     "placeholder": "搜索"
   },
+  "footer": {
+    "runtime": "本站已运行 {years} 年 {days} 天 {hours} 时 {minutes} 分 {seconds} 秒"
+  },
   "music": {
     "open": "打开音乐播放器",
     "close": "关闭音乐播放器",

@@ -66,6 +66,9 @@
   "search": {
     "placeholder": "Search"
   },
+  "footer": {
+    "runtime": "Site online for {years}y {days}d {hours}h {minutes}m {seconds}s"
+  },
   "music": {
     "open": "Open music player",
     "close": "Close music player",
