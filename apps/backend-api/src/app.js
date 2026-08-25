@@ -39,7 +39,6 @@ export function createApp() {
   app.route('/site-profile', siteProfile)
   app.route('/admin/rebuild', rebuild)
   app.route('/assets', assets)
-
   app.notFound((c) => c.json({ error: 'Not found' }, 404))
 
   return app

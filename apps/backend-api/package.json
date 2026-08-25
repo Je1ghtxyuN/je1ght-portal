@@ -7,19 +7,20 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
+    "test": "node --test test/*.test.js",
     "prisma:generate": "prisma generate",
     "prisma:validate": "prisma validate",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
-    "@hono/node-server": "^1.14.3",
+    "@hono/node-server": "^2.0.12",
     "@prisma/client": "^6.19.3",
     "bcryptjs": "^3.0.3",
     "dotenv": "^16.5.0",
-    "hono": "^4.7.10",
-    "js-yaml": "^4.1.0",
-    "sharp": "^0.34.5",
+    "hono": "^4.12.32",
+    "js-yaml": "^4.3.0",
+    "sharp": "^0.35.3",
     "zod": "^3.24.4"
   },
   "devDependencies": {

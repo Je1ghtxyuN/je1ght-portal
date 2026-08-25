@@ -14,7 +14,7 @@
 
 nav:
   # 🔧 导航栏 logo 图片路径 — Admin Assets → Icon 管理
-  logo: /shared-assets/images/icon.png
+  logo:
   # 是否在导航栏显示网站标题
   display_title: true
   # 是否在文章页导航栏显示文章标题
@@ -24,13 +24,6 @@ nav:
 
 # 🔧 导航菜单 — Admin UI → Site Profile → Navigation 管理（portal-data-sync.js 覆盖）
 menu:
-  Home: / || fas fa-house
-  Archives: /archives/ || fas fa-box-archive
-  Categories: /categories/ || fas fa-folder-open
-  Portfolio: /portfolio/ || fas fa-laptop-code
-  Contact: /contact/ || fas fa-envelope
-  Friends: /link/ || fas fa-user-group
-  About: /about/ || fas fa-id-card
 
 # --------------------------------------
 # 代码块设置
@@ -59,18 +52,17 @@ code_blocks:
 # 🔧 社交链接 — Admin UI → Site Profile → Social Links 管理（portal-data-sync.js 覆盖）
 # 格式: 图标类名: 链接 || 标签 || 颜色
 social:
-  fab fa-github: https://github.com/Je1ghtxyuN || GitHub || '#24292e'
 
 # --------------------------------------
 # 图片与品牌资源
 # --------------------------------------
 
 # 🔧 网站图标（favicon）— Admin Site Profile → Icon 管理
-favicon: /shared-assets/images/icon.png
+favicon:
 
 # 🔧 头像 — Admin Site Profile → Avatar 管理
 avatar:
-  img: /shared-assets/images/profile.jpg
+  img:
   # 头像旋转动效
   effect: true
 
@@ -78,23 +70,23 @@ avatar:
 disable_top_img: false
 
 # 🔧 页面默认顶部图片 — Admin Site Profile → Backgrounds 管理（portal-data-sync.js 覆盖）
-default_top_img: /shared-assets/images/background.jpg
+default_top_img:
 
 # 🔧 首页顶部图片（portal-data-sync.js 覆盖）
-index_img: /shared-assets/images/background.jpg
+index_img:
 
 # 🔧 归档页顶部图片（portal-data-sync.js 覆盖）
-archive_img: /shared-assets/images/background.jpg
+archive_img:
 
 # 🔧 标签页顶部图片（portal-data-sync.js 覆盖）
-tag_img: /shared-assets/images/background.jpg
+tag_img:
 
 # 按标签设置不同顶部图片
 # 格式: - 标签名: 图片路径
 tag_per_img:
 
 # 🔧 分类页顶部图片（portal-data-sync.js 覆盖）
-category_img: /shared-assets/images/background.jpg
+category_img:
 
 # 按分类设置不同顶部图片
 category_per_img:
@@ -186,9 +178,6 @@ subtitle:
   source: false
   # 🔧 副标题内容，会被 portal-data-sync.js 覆盖为 Admin UI 中设置的值
   sub:
-    - Code, Anime, Games, and Coffee.
-    - VR, HCI, and game dev.
-    - Writing things down so I don't forget.
 
 # 首页文章布局
 # 1: 封面左，文字右
@@ -292,14 +281,14 @@ footer:
   owner:
     enable: true
     # 🔧 起始年份 — Admin UI → Site Profile 管理（portal-data-sync.js 覆盖）
-    since: 2025
+    since:
   # 主题和框架的版权信息
   copyright:
     enable: true
     # 显示 Hexo + Butterfly 版本号
     version: true
   # 🔧 自定义页脚文字 — Admin UI → Site Profile → Footer 管理（portal-data-sync.js 覆盖）
-  custom_text: <span id="site-running-time" data-site-started="2025-06-25"></span>
+  custom_text:
 
 # --------------------------------------
 # 侧边栏
@@ -406,7 +395,7 @@ rightside_bottom:
 
 # 简繁转换
 translate:
-  # 禁用 — 本网站使用自定义 portal-i18n.js 实现中/英/日多语言切换
+  # 禁用 — 本网站使用主题无关的 portal-locale-core 与 Butterfly 适配器切换界面语言
   enable: false
   default: 繁
   defaultEncoding: 2
@@ -490,10 +479,10 @@ busuanzi:
 
 math:
   # 公式引擎: mathjax / katex（留空 = 禁用）
-  use:
+  use: mathjax
   # true = 每页都加载公式引擎
   # false = 只在 frontmatter 中声明了 mathjax: true 或 katex: true 的页面加载
-  per_page: true
+  per_page: false
   hide_scrollbar: false
 
   mathjax:
@@ -993,7 +982,7 @@ pjax:
 
 # APlayer / Meting 音乐播放器（全局底部固定迷你播放器）
 aplayerInject:
-  enable: true
+  enable: false
   per_page: true
 
 # Snackbar 提示条（切换暗色模式/简繁时的提示）
@@ -1058,18 +1047,19 @@ css_prefix: true
 # 向 <head> 和 <body> 底部注入自定义 CSS / JS
 inject:
   head:
-    # 自定义 CSS（portal 页面样式），BUILD_VER 在部署时替换为时间戳用于缓存爆破
-    - <link rel="stylesheet" href="/css/portal-custom.css?v=BUILD_VER">
+    # Portal CSS 分层：令牌 → 基础 → Hero → 组件 → Butterfly 页面适配器 → 响应式
+    - <link rel="stylesheet" href="/css/portal/tokens.css?v=BUILD_VER">
+    - <link rel="stylesheet" href="/css/portal/base.css?v=BUILD_VER">
+    - <link rel="stylesheet" href="/css/portal/hero.css?v=BUILD_VER">
+    - <link rel="stylesheet" href="/css/portal/components.css?v=BUILD_VER">
+    # Butterfly 页面结构视觉适配器，可在更换主题时整体替换
+    - <link rel="stylesheet" href="/css/portal/butterfly-pages.css?v=BUILD_VER">
+    - <link rel="stylesheet" href="/css/portal/responsive.css?v=BUILD_VER">
   bottom:
     # 自定义 Hero 脚本（首页打字机效果、头像、背景旋转）
     - <script src="/js/portal-hero.js?v=BUILD_VER" defer></script>
-    # 自定义音乐播放器脚本（右下角悬浮按钮 + 浮窗面板）
+    # 自定义音乐播放器脚本；APlayer/Meting 仅在用户首次点击后加载
     - <script src="/js/portal-music-player.js?v=BUILD_VER" defer></script>
-    # 全局音乐播放器 — STUDY WITH MIKU 网易云歌单（由 portal-music-player.js 接管放入浮窗）
-    # 注意：butterfly-extsrc 版 MetingJS 使用 div.aplayer + data-* 属性，不是 <meting-js>
-    - <div class="aplayer no-destroy" data-server="netease" data-type="playlist" data-id="17688647005" data-autoplay="false" data-theme="#49B1F5" data-loop="all" data-order="random" data-preload="auto" data-volume="0.7"></div>
-    # 兜底调用：MetingJS 注册的 DOMContentLoaded 可能已经错过，window.onload 时补调
-    - <script>window.addEventListener('load',function(){if(typeof loadMeting==='function')loadMeting();});</script>
 
 # --------------------------------------
 # CDN 设置（不要修改除非你清楚其含义）

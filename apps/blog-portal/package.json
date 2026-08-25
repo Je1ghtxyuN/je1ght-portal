@@ -4,11 +4,13 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "hexo server",
-    "build": "hexo generate",
+    "build": "hexo clean && hexo generate",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
-    "home:custom": "node -e \"var f='scripts/portal-home-generator.js',d='scripts/_disabled';require('fs').existsSync(d+'/portal-home-generator.js')&&require('fs').renameSync(d+'/portal-home-generator.js',f);console.log('Homepage: custom template')\"",
-    "home:default": "node -e \"var f='scripts/portal-home-generator.js',d='scripts/_disabled';require('fs').mkdirSync(d,{recursive:true});require('fs').existsSync(f)&&require('fs').renameSync(f,d+'/portal-home-generator.js');console.log('Homepage: Butterfly default (edit source/index.md: set layout: index, remove type and tag)')\""
+    "test": "node --test test/*.test.js",
+    "test:generated-output": "PORTAL_BUILD_VERSION=$(git rev-parse --short HEAD) npm run build && PORTAL_BUILD_VERSION=$(git rev-parse --short HEAD) node --test test/generated-output/butterfly-pages-output.test.js",
+    "validate": "node lib/portal/validate-output.js public",
+    "check": "npm test && npm run test:generated-output && npm run validate"
   },
   "hexo": {
     "version": "7.3.0"

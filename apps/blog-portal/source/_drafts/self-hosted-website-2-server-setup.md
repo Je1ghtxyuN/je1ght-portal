@@ -205,7 +205,7 @@ docker run hello-world
 
 ```bash
 # 网站源文件 —— Hexo portal 的完整代码
-mkdir -p ~/websites/je1ght-platform/portal-source
+mkdir -p ~/code/websites/je1ght-platform/portal-source
 
 # Docker 编排目录 —— docker-compose.yml 和容器相关配置
 mkdir -p ~/docker/je1ght-platform/nginx
@@ -216,13 +216,14 @@ mkdir -p ~/docker/je1ght-platform/backend-api
 
 ```text
 /home/je1ght/
-├── websites/
-│   └── je1ght-platform/
-│       └── portal-source/        # Hexo portal（deploy.sh 同步到这里）
-│           ├── source/
-│           ├── public/           # ← Docker bind mount 挂载点
-│           ├── node_modules/
-│           └── _config.yml
+├── code/
+│   └── websites/
+│       └── je1ght-platform/
+│           └── portal-source/        # Hexo portal（deploy.sh 同步到这里）
+│               ├── source/
+│               ├── public/           # ← Docker bind mount 挂载点
+│               ├── node_modules/
+│               └── _config.yml
 │
 └── docker/
     └── je1ght-platform/

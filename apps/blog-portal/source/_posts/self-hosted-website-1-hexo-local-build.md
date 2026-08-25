@@ -1,6 +1,6 @@
 ---
 title: 从零自建网站（一）Hexo 本地构建与项目结构
-date: 2026-05-21 12:00:00
+date: 2026-05-25 02:04:00
 description: 系列第一篇：为什么选择 Hexo，Butterfly 主题的安装与配置，monorepo 项目结构拆解，以及如何本地写文章、配置多语言、实时预览
 categories:
   - Engineering
@@ -12,6 +12,7 @@ tags:
   - 自托管
   - 博客
   - 静态网站
+cover: /postimage/self-hosted-website/IMG_3993.JPG
 ---
 
 ## 为什么搭博客
@@ -130,6 +131,7 @@ source/
 
 每个 `index.md` 的 frontmatter 决定了页面的行为和外观。以 About 页为例：
 
+{% raw %}
 ```markdown
 ---
 title: About
@@ -144,6 +146,7 @@ description: Personal introduction and project context.
 
 {% portal_about %}
 ```
+{% endraw %}
 
 frontmatter 字段说明：
 
@@ -151,11 +154,11 @@ frontmatter 字段说明：
 - `type` — Butterfly 会根据 type 值决定页面的渲染方式：
   - **内置类型**：`categories`、`tags`、`archives` 分别渲染分类页、标签页、归档页，Butterfly 内置了这些页面的模板，只需声明 type 就能用。当你创建一个 `source/categories/index.md` 并写上 `type: categories`，Hexo构建时发现这个 type，Butterfly 主题内部有对应的模板文件（layout/category.ejs、layout/tag.ejs、layout/archive.ejs）。Hexo会自动把全站文章的分类/标签/日期数据注入模板，生成最终 HTML。
   - **自定义类型**：`portal-about`、`portal-contact`、`portal-portfolio` 等是自定义的 type，由自定义脚本注入数据或模板。依靠内容区的tag plugin驱动。比如About页：
-  1. source/about/index.md 声明 type: portal-about，内容区写 {% portal_about %}
+  1. source/about/index.md 声明 type: portal-about，内容区写 &#123;% portal_about %&#125;
   2. scripts/portal-tags.js 第 7 行：hexo.extend.tag.register('portal_about', 
   () => portalRenderer.renderAbout())
   3. scripts/portal-renderer.js 中的 renderAbout() 函数读取 YAML数据文件（source/_data/site_profile.yml），手写 HTML 字符串返回
-  4. Hexo 构建时遇到 {% portal_about %} 这个 tag，调用注册的回调，把返回的 HTML替换进去
+  4. Hexo 构建时遇到 &#123;% portal_about %&#125; 这个 tag，调用注册的回调，把返回的 HTML替换进去
 - `top_img: false` — 不显示顶部大图
 - `aside: false` — 不显示侧边栏
 - `comments: false` — 页面关闭评论
@@ -271,7 +274,7 @@ Hexo 支持在 `scripts/` 目录下放置自定义脚本，利用 Hexo 的扩展
 | `portal-shared-config.js`  | 配置加载器 | 读取 `site-identity.json`，提供 i18n 语言列表和默认翻译文本，被其他脚本依赖                          |
 | `portal-renderer.js`       | 渲染引擎   | 手写 HTML 字符串生成器，包含 Home / About / Contact / Portfolio 等页面的渲染函数                     |
 | `portal-home-generator.js` | Generator  | 抢占 `index.html` 路由，调用 `renderHome()` 生成自定义首页                                           |
-| `portal-tags.js`           | Tag Plugin | 注册 `{% portal_about %}`、`{% portal_contact %}`、`{% portal_portfolio %}` 三个 tag，供对应页面调用 |
+| `portal-tags.js`           | Tag Plugin | 注册 `&#123;% portal_about %&#125;`、`&#123;% portal_contact %&#125;`、`&#123;% portal_portfolio %&#125;` 三个 tag，供对应页面调用 |
 | `portal-data-sync.js`      | Filter     | 在 `before_generate` 阶段同步 YAML 数据到主题配置，注入 i18n 脚本标签                                |
 | `auto-date.js`             | Filter     | 自动给没有写日期 frontmatter 的文章补上文件修改时间                                                  |
 

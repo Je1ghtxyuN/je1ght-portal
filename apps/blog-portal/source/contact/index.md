@@ -6,7 +6,7 @@ type: portal-contact
 top_img: false
 aside: false
 comments: false
-description: Structured contact surface for the rebuilt portal and its future backend-owned messaging flow.
+description: Contact Je1ghtxyuN by email through the site form.
 ---
 
 {% portal_contact %}

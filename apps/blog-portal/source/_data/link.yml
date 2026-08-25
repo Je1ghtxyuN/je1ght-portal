@@ -16,11 +16,11 @@
     - name: "dieWehmut"
       link: "https://diesw.tech/"
       avatar: "https://github.com/dieWehmut.png"
-      descr: "NJU IST"
+      descr: "diesw-nexus desuwa"
     - name: "fugod"
       link: "https://fufu142857.github.io/"
       avatar: "https://github.com/fufu142857.png"
-      descr: "ZJU Turing"
+      descr: "fufu"
 # - class_name: "组织"
 #   class_desc: ""
 #   link_list:

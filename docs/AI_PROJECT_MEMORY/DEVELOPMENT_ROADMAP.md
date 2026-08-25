@@ -138,7 +138,7 @@ This roadmap is intended to guide gradual execution across many future sessions.
 - plan and rehearse rollback steps
 - switch production traffic
 - disable legacy Firebase writes
-- retire Formspree usage
+- retain and monitor the owner-approved Formspree email delivery flow
 - phase out Firebase services in a controlled sequence
 
 ### Dependency Notes

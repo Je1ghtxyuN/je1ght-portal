@@ -1,132 +1,97 @@
 # Content Map
 
-This document explains where the blog portal content is stored, where it is used, and how it flows into the branded homepage.
+## Ownership
 
-## Site Profile Data
+| Content | Canonical owner | Build representation |
+| --- | --- | --- |
+| Site profile | MySQL `SiteProfile` | `source/_data/site_profile.yml` snapshot |
+| Portfolio | MySQL `PortfolioItem` | `source/_data/portfolio.yml` snapshot |
+| Admin posts | MySQL `BlogPost` | managed Markdown snapshot |
+| Manual posts and drafts | repository Markdown | imported intentionally |
+| Navigation and shortcuts | `source/_data/navigation.yml` | direct |
+| Friend links | `source/_data/link.yml` | direct |
+| Public portal UI translations | `packages/shared-assets/locales/portal-ui/` | semantic `data-ui-*` attributes |
+| Authored content translations | language-specific Markdown/routes when present | never runtime DOM replacement |
+| Brand/media assets | `packages/shared-assets/` | `source/shared-assets` mapping |
+| Contact form destination | MySQL `SiteProfile.contact.formspree_endpoint` | direct Formspree form action |
 
-Source of truth:
+Use `scripts/content-snapshot.sh` for explicit database snapshot operations.
+Normal deployment never synchronizes database-owned `_data` files in both
+directions.
 
-- `apps/blog-portal/source/_data/site_profile.yml`
+## Profile field projection
 
-Used by:
+The table below is the override audit for values editable at `/admin/`. The
+left column is authoritative; the right column is generated or projected and
+must not be edited as a competing source.
 
-- `apps/blog-portal/scripts/portal-renderer.js`
-- `apps/blog-portal/scripts/portal-data-sync.js`
+| Admin / `SiteProfile` field | Runtime consumer | Overrides |
+| --- | --- | --- |
+| `owner.display_name` | Hexo author and Butterfly author | `_config.yml: author` |
+| `subtitle` | Hexo subtitle, Butterfly subtitle and site subtitle | `_config.yml: subtitle`, Butterfly subtitle placeholders |
+| `icon_path` | Butterfly nav logo; derived `site-favicon.png` path | Butterfly `nav.logo` and `favicon` |
+| `avatar_path` | Butterfly sidebar avatar | Butterfly `avatar.img` |
+| `hero_background_path` | default, index, archive, tag, and category top images | Butterfly top-image fields |
+| `site_started_year` | Butterfly footer owner year | Butterfly `footer.owner.since` |
+| `site_started_date`, `footer_note` | generated footer custom text and runtime counter | Butterfly `footer.custom_text` |
+| `social_links` | Butterfly social menu | Butterfly `social` |
+| `contact.*` except endpoint | Contact page renderer | no Butterfly setting |
+| `contact.formspree_endpoint` | Contact form `action` | no fallback or hard-coded endpoint |
+| `intro.*`, `about.*`, `home.*`, `hero_phrases` | focused portal renderers/browser behavior | no Butterfly setting |
 
-Main responsibilities:
+`navigation.yml` independently owns the Butterfly menu and homepage shortcuts.
+An empty `portfolio.yml` intentionally removes Portfolio from both. Portal UI
+JSON can replace controls, labels, placeholders, search, empty states, and
+music wrapper messages in the browser. It does not own paths, articles, profile
+copy, project descriptions, experience, skills, categories, tags, or the
+homepage subtitle.
 
-- owner name and subtitle
-- avatar, icon, and background asset paths
-- homepage intro text
-- footer social and contact data
-- about page text, skills, and experience
-- Study Room landing-page copy
+## Precedence rules
 
-UI surfaces fed by this file:
+1. Admin saves profile data to MySQL.
+2. **Rebuild Portal** exports MySQL to the managed YAML snapshot.
+3. Hexo reads that snapshot.
+4. `portal-data-sync.js` applies the explicit projection above in memory.
+5. Butterfly renders the projected values.
 
-- homepage hero
-- homepage footer panel
-- about page
-- Study Room entry page
-- Butterfly shell metadata such as avatar, favicon, and subtitle
+Therefore values in `_config.butterfly.yml` that are listed in the projection
+table are defaults/placeholders, not a second editing surface. The projection
+does not write back to source files. After a production Admin edit, pull and
+commit the snapshot so GitHub retains the current rebuildable state.
 
-## Portfolio Data
+## Build flow
 
-Source of truth:
+1. Hexo loads Markdown and `_data` snapshots.
+2. `scripts/portal-data-sync.js` calls
+   `lib/portal/adapters/butterfly-theme-projection.js` to project profile and
+   navigation values into an in-memory Butterfly configuration.
+3. `scripts/portal-home-generator.js` owns `/`.
+4. `lib/portal/create-renderer.js` composes focused renderers under
+   `lib/portal/render/`.
+5. Empty portfolio data suppresses its menu, shortcut, and homepage preview.
+6. Butterfly renders the shell and Hexo writes `public/`.
+7. `lib/portal/validate-output.js` validates all generated HTML and internal
+   references.
 
-- `apps/blog-portal/source/_data/portfolio.yml`
+## Structural settings
 
-Used by:
+Recent-post and portfolio-preview limits live in
+`lib/portal/render/data.js`. Visual structure lives in `source/css/portal/`.
+Editable content belongs in profile/navigation/Markdown data. Interface wording
+belongs in `packages/shared-assets/locales/portal-ui/`. Neither belongs in the
+Butterfly override.
 
-- `apps/blog-portal/scripts/portal-renderer.js`
+## Theme boundary
 
-Main responsibilities:
+| Responsibility | Owner |
+| --- | --- |
+| Semantic page rendering | `lib/portal/render/` |
+| Portal interface locale runtime | `source/js/portal-locale-core.js` |
+| Butterfly DOM selectors, PJAX, and toolbar placement | `source/js/adapters/butterfly-adapter.js` |
+| Butterfly build-time configuration | `lib/portal/adapters/butterfly-theme-projection.js` |
+| Music loading and translated wrapper state | `source/js/portal-music-player.js` |
 
-- project card titles
-- project summaries
-- preview images
-- tags
-- tech stack lists
-- project links
-
-UI surfaces fed by this file:
-
-- homepage portfolio preview section
-- `/portfolio/` full project grid
-
-## Navigation Data
-
-Source of truth:
-
-- `apps/blog-portal/source/_data/navigation.yml`
-
-Used by:
-
-- `apps/blog-portal/scripts/portal-renderer.js`
-- `apps/blog-portal/scripts/portal-data-sync.js`
-
-Main responsibilities:
-
-- main portal navigation items
-- homepage shortcut card definitions
-
-UI surfaces fed by this file:
-
-- Butterfly top navigation
-- homepage shortcut section
-
-## Blog Posts
-
-Source of truth:
-
-- `apps/blog-portal/source/_posts/`
-
-Used by:
-
-- Hexo post generation
-- `apps/blog-portal/scripts/portal-home-generator.js`
-- `apps/blog-portal/scripts/portal-renderer.js`
-
-Main responsibilities:
-
-- article content
-- article metadata such as title, date, tags, categories, and description
-
-UI surfaces fed by posts:
-
-- homepage recent-post section
-- `/blog/`
-- `/archives/`
-- `/categories/`
-- `/tags/`
-- search index
-
-## Homepage Rendering Flow
-
-The homepage does not read from a handwritten markdown page anymore.
-
-Flow:
-
-1. Hexo loads posts, pages, and `_data` YAML files into `locals`.
-2. `apps/blog-portal/scripts/portal-home-generator.js` creates the root `index.html` route.
-3. The generator calls `renderHome({ siteLocals: locals })` from `apps/blog-portal/scripts/portal-renderer.js`.
-4. `portal-renderer.js` reads `site_profile.yml`, `portfolio.yml`, `navigation.yml`, and the loaded post collection.
-5. The renderer builds the hero, shortcut cards, recent posts, portfolio preview, and footer sections.
-6. Butterfly wraps that generated content in the normal page shell.
-
-## Structural Control Points
-
-These values are intentionally controlled in code:
-
-- homepage recent-post count: `PORTAL_CONFIG.HOMEPAGE_POST_LIMIT`
-- homepage portfolio preview count: `PORTAL_CONFIG.PORTFOLIO_PREVIEW_LIMIT`
-- Study Room dev link: `PORTAL_CONFIG.STUDY_ROOM_DEV_URL`
-- Study Room production placeholder path: `PORTAL_CONFIG.STUDY_ROOM_PROD_URL`
-
-These values live in:
-
-- `apps/blog-portal/scripts/portal-renderer.js`
-
-Reason:
-
-- content editors should be able to change text and data safely without accidentally changing homepage structure or routing behavior
+Changing Hexo themes must not require edits to the renderer, portal UI
+catalogs, locale core, music controller, content snapshots, or Formspree form.
+Replace the DOM adapter, replace the build-time theme projection, and add the
+new theme configuration file.

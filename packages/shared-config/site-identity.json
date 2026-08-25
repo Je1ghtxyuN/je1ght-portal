@@ -14,6 +14,7 @@
   },
   "i18n": {
     "defaultLocale": "en",
+    "portalLocaleBasePath": "/shared-assets/locales/portal-ui",
     "supportedLocales": [
       {
         "code": "en",
